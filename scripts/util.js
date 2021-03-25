@@ -168,12 +168,13 @@ function isAttackedWithIncrement(colorName, i, j, iInc, jInc, types) {
 }
 
 function findWithIncrement(colorName, i, j, iInc, jInc) {
+  var initI = i, initJ = j
   while (0 <= i && i < columns && 0 <= j && j < rows) {
     if (isOpen(i, j)) {
-      options.push(new Move(i, j, moveScore(i, j)));
+      options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
     } else {
       if (hasEnemy(colorName, i, j)) {
-        options.push(new Move(i, j, moveScore(i, j)));
+        options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
       }
       break;
     }
@@ -190,6 +191,6 @@ function pushOptionIfOpenOrEnemy(colorName, i, j) {
     j < rows &&
     (isOpen(i, j) || hasEnemy(colorName, i, j))
   ) {
-    options.push(new Move(i, j, moveScore(i, j)));
+    options.push(new Move(i, j, i, j, moveScore(i, j)));
   }
 }

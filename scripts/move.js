@@ -7,8 +7,8 @@ function findMoves(pressedX, pressedY) {
     options = options.filter((option) => {
       return !isBeingAttacked(
         turnColour,
-        option.x,
-        option.y,
+        option.endX,
+        option.endY,
         pressedX,
         pressedY
       );
@@ -28,8 +28,8 @@ function findMoves(pressedX, pressedY) {
               j,
               pressedX,
               pressedY,
-              option.x,
-              option.y
+              option.endX,
+              option.endY
             );
           });
           break;
@@ -44,10 +44,8 @@ function findMoves(pressedX, pressedY) {
   console.log("Took", seconds);
 }
 
-var lastmove;
-
 function MovePiece(currX, currY, pressedX, pressedY, Grid, fromsearch = false) {
-  var pieceinoption = grid[pressedX][pressedY];
+  var pieceinoption = Grid[pressedX][pressedY];
 
   var end = Grid[currX][currY].colorName == WHITE ? 0 : rows - 1;
 
@@ -57,12 +55,9 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, fromsearch = false) {
 
   Grid[currX][currY].moved = true;
 
-  const option = options.find((x) => x.x === pressedX && x.y === pressedY);
+  const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
 
-  if (
-    Grid[currX][currY].type == "Pawn" &&
-    (pressedY == currX + 2 || pressedY == currY - 2)
-  ) {
+  if (Grid[currX][currY].type == "Pawn" && (pressedY == currX + 2 || pressedY == currY - 2)) {
     canEnPassant = true;
     enPassantCoords = [pressedX, pressedY];
   }
@@ -119,7 +114,7 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, fromsearch = false) {
           inCheck = turnColour;
           document.getElementById(
             "check"
-          ).innerText = `${turnColour} is in check`;
+          ).innerText = `${turnColour} is in check`
         } else {
           inCheck = null;
           document.getElementById("check").innerText = `${turnColour}'s turn`;
@@ -129,22 +124,22 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, fromsearch = false) {
     }
   }
 
-  lastmove = [[currX, currY], option, pieceinoption];
-
   options = [];
+
+  option.piece = pieceinoption
+
+  previousMoves.push(option)
 }
+var prev = grid
 
 function UndoMove() {
-  if (lastmove != undefined) {
-    var x = lastmove[0][0];
-    var y = lastmove[0][1];
-    var move = lastmove[1];
+  console.log(previousMoves)
+  if (previousMoves.length > 0) {
+    var last = previousMoves[previousMoves.length - 1]
+    var { endX, endY } = last
+    console.log(last.piece)
+    var end = grid[endX][endY]
+    grid[endX][endY] = last.piece
 
-    var piece = grid[move.x][move.y];
-
-    grid[move.x][move.y] = lastmove[2];
-    grid[x][y] = piece;
   }
-
-  options = [];
 }

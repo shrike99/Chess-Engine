@@ -1,3 +1,16 @@
+var white_king_img;
+var black_king_img;
+var white_pawn;
+var black_pawn;
+var white_queen;
+var black_queen;
+var white_rook;
+var black_rook;
+var white_knight;
+var black_knight;
+var white_bishop;
+var black_bishop;
+
 const columns = 8;
 const rows = 8;
 
@@ -7,7 +20,7 @@ const HEIGHT = 600;
 const w = WIDTH / columns;
 const h = HEIGHT / rows;
 
-const grid = new Array(columns);
+var grid = new Array(columns);
 
 var options = [];
 var current = [];
@@ -17,6 +30,18 @@ var inCheck = null;
 
 // initial turn
 var turnColour = WHITE;
+
+var stopGame = false;
+
+var canEnPassant = false;
+
+var enPassantCoords;
+
+
+var previousMoves = []
+
+
+
 
 function load() {
   var fen = document.getElementById("fen").value;
@@ -31,7 +56,7 @@ function load() {
       var letters = sections[i].split("");
       var letter = letters[j];
       if (isNumeric(letter)) {
-        for (k = j; k < parseInt(letter); k++) {}
+        for (k = j; k < parseInt(letter); k++) { }
       }
       if (isLowerCase(letter)) {
         colour = BLACK;
@@ -39,19 +64,6 @@ function load() {
     }
   }
 }
-
-var white_king_img;
-var black_king_img;
-var white_pawn;
-var black_pawn;
-var white_queen;
-var black_queen;
-var white_rook;
-var black_rook;
-var white_knight;
-var black_knight;
-var white_bishop;
-var black_bishop;
 
 function setup() {
   black_king_img = loadImage("images/black_king.png");
@@ -88,18 +100,13 @@ function draw() {
   }
   for (var i = 0; i < options.length; i++) {
     fill(0, 255, 0, 100);
-    circle(options[i].x * w + w / 2, options[i].y * h + h / 2, w - 55);
+    circle(options[i].endX * w + w / 2, options[i].endY * h + h / 2, w - 55);
   }
 
   if (turnColour == BLACK && !stopGame) {
     computerTurn();
   }
 }
-
-var stopGame = false;
-
-var canEnPassant = false;
-var enPassantCoords;
 
 function mouseClicked() {
   if (!stopGame && turnColour == WHITE && 0 <= mouseX && mouseX <= WIDTH && 0 <= mouseY && mouseY <= HEIGHT) {
@@ -121,7 +128,7 @@ function mouseClicked() {
 
     //MOVES HAVE ALREADY BEEN FOUND SQUARE
 
-    if (options.some((x) => x.x === pressedX && x.y === pressedY)) {
+    if (options.some((x) => x.endX === pressedX && x.endY === pressedY)) {
       MovePiece(current[0], current[1], pressedX, pressedY, grid);
     }
   }
@@ -141,8 +148,9 @@ function removeArr(arr, element) {
 }
 
 function Eval() {
-  setGrid(grid);
-  console.log("EVAL:", Search(5, WHITE));
+  UndoMove();
+  // setGrid(grid);
+  // console.log("EVAL:", Search(5, WHITE));
 }
 
 function randomMove() {
@@ -214,7 +222,7 @@ function randomMove() {
 
   options.push(selectedMove);
 
-  MovePiece(selectedPiece[0], selectedPiece[1], selectedMove.x, selectedMove.y, grid);
+  MovePiece(selectedPiece[0], selectedPiece[1], selectedMove.endX, selectedMove.endY, grid);
 }
 
 function randm(min, max) {

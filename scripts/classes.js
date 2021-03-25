@@ -110,32 +110,32 @@ class Pawn extends Piece {
 
     if (!isOpen(i + 1, j) && hasEnemy(this.colorName, i + 1, j) && j == enpassantrow) {
       if (canEnPassant && enPassantCoords[0] == i + 1 && enPassantCoords[1] == j) {
-        options.push(new Move(i + 1, nextRow, moveScore(i + 1, nextRow), ENPASSANT));
+        options.push(new Move(i, j, i + 1, nextRow, moveScore(i + 1, nextRow), ENPASSANT));
       }
     }
 
     if (!isOpen(i - 1, j) && hasEnemy(this.colorName, i - 1, j) && j == enpassantrow) {
       if (canEnPassant && enPassantCoords[0] == i - 1 && enPassantCoords[1] == j) {
-        options.push(new Move(i - 1, nextRow, moveScore(i - 1, nextRow), ENPASSANT));
+        options.push(new Move(i, j, i - 1, nextRow, moveScore(i - 1, nextRow), ENPASSANT));
       }
     }
 
     if (0 <= nextRow && nextRow < rows && isOpen(i, nextRow)) {
-      options.push(new Move(i, nextRow, moveScore(i, nextRow)));
+      options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
       nextRow += direction;
       if (0 <= nextRow && nextRow < rows && isOpen(i, nextRow) && !this.moved) {
-        options.push(new Move(i, nextRow, moveScore(i, nextRow)));
+        options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
       }
     }
     nextRow = j + direction;
 
     i--;
     if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow) && !isOpen(i, nextRow)) {
-      options.push(new Move(i, nextRow, moveScore(i, nextRow)));
+      options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
     }
     i += 2;
     if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow) && !isOpen(i, nextRow)) {
-      options.push(new Move(i, nextRow, moveScore(i, nextRow)));
+      options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
     }
   }
 }
@@ -242,7 +242,7 @@ class King extends Piece {
           !isBeingAttacked(this.colorName, i + 2, j)
         ) {
           console.log("rook found");
-          options.push(new Move(i + 2, j, moveScore(i + 2, j), CASTLE));
+          options.push(new Move(i, j, i + 2, j, moveScore(i + 2, j), CASTLE));
         }
       }
 
@@ -259,7 +259,7 @@ class King extends Piece {
           !isBeingAttacked(this.colorName, i - 1, j) &&
           !isBeingAttacked(this.colorName, i - 2, j)
         ) {
-          options.push(new Move(i - 2, j, moveScore(i - 2, j), CASTLE));
+          options.push(new Move(i, j, i - 2, j, moveScore(i - 2, j), CASTLE));
         }
       }
     }
@@ -286,9 +286,12 @@ class Queen extends Piece {
   }
 }
 
-function Move(x, y, score, extra = "") {
-  this.x = x;
-  this.y = y;
+function Move(initX, initY, endX, endY, score, extra = "") {
+  this.initX = initX;
+  this.initY = initY;
+  this.piece;
+  this.endX = endX;
+  this.endY = endY;
   this.score = score;
   this.extra = extra;
 }

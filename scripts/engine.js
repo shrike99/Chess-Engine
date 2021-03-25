@@ -6,22 +6,17 @@ var pieceScores = [
   ["Queen", 9],
 ];
 
-var testGrid;
-
-function setGrid(grid) {
-  testGrid = grid;
-}
 
 function Search(depth, col) {
   if (depth == 0) {
-    return Evaluate(col, testGrid);
+    return Evaluate(col, grid);
   }
 
   var Pieces = [];
 
-  for (i = 0; i < testGrid.length; i++) {
-    for (j = 0; j < testGrid[i].length; j++) {
-      if (testGrid[i][j] != undefined && testGrid[i][j].colorName == col) {
+  for (i = 0; i < grid.length; i++) {
+    for (j = 0; j < grid[i].length; j++) {
+      if (grid[i][j] != undefined && grid[i][j].colorName == col) {
         Pieces.push([i, j]);
       }
     }
@@ -75,7 +70,7 @@ function Search(depth, col) {
 
       options.push(pieceMovesList[i][1][j]);
 
-      MovePiece(x, y, x2, y2, testGrid, true);
+      MovePiece(x, y, x2, y2, grid, true);
 
       var evaluate = -Search(depth - 1, othercol);
 
@@ -157,8 +152,8 @@ function moveScore(piece, x, y) {
   if (pieceTake != undefined) {
     var takeScore = pieceScores.find((x) => x[0] == pieceTake.type)[1];
     var pieceScore = pieceScores.find((x) => x[0] == pieceScore.type)[1];
-
-    pieceScore;
+    console.log(pieceScore)
+    return pieceScore;
   }
   return 0;
 }
