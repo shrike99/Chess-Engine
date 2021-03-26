@@ -148,9 +148,9 @@ function removeArr(arr, element) {
 }
 
 function Eval() {
-  UndoMove();
+  //UndoMove();
   // setGrid(grid);
-  // console.log("EVAL:", Search(5, WHITE));
+  console.log("EVAL:", Search(5, WHITE));
 }
 
 function randomMove() {

@@ -41,6 +41,63 @@ async function initGrid(board) {
   }
 }
 
+function getWhite(_grid) {
+  var whitePieces = [];
+
+  for (i = 0; i < _grid.length; i++) {
+    for (j = 0; j < _grid[i].length; j++) {
+      if (_grid[i][j] != undefined && _grid[i][j].colorName == WHITE) {
+        whitePieces.push(_grid[i][j]);
+      }
+    }
+  }
+  return whitePieces
+}
+
+function getBlack(_grid) {
+  var blackPieces = [];
+
+  for (i = 0; i < _grid.length; i++) {
+    for (j = 0; j < _grid[i].length; j++) {
+      if (_grid[i][j] != undefined && _grid[i][j].colorName == BLACK) {
+        blackPieces.push(_grid[i][j]);
+      }
+    }
+  }
+  return blackPieces
+}
+
+function getScore(pieces) {
+  score = 0
+  for (i = 0; i < grid.length; i++) {
+    var piece = pieceScores.find((x) => x[0] == pieces[i].type);
+    if (piece != undefined) {
+      score += piece[1];
+    }
+  }
+  return score
+}
+
+function deepclone(grid) {
+  var clone = [];
+  for (i = 0; i < grid.length; i++) {
+    clone[i] = [...grid[i]]
+    for (j = 0; j < grid[i].length; j++) {
+      clone[i][j] == grid[i][j]
+    }
+  }
+  return clone
+}
+
+function Mate() {
+  if (inCheck == othercol) {
+    if (options.length == 0) {
+      return true
+    }
+  }
+  return false
+}
+
 function isUpperCase(n) {
   return n === n.toUpperCase();
 }

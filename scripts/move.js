@@ -44,7 +44,24 @@ function findMoves(pressedX, pressedY) {
   console.log("Took", seconds);
 }
 
-function MovePiece(currX, currY, pressedX, pressedY, Grid, fromsearch = false) {
+function EvaluateMove(x1, y1, move, col, _grid) {
+
+  var { endX, endY } = move
+  var piece = _grid[x1][y1]
+
+  _grid[endX][endY] = piece
+
+  piece = null
+
+  var blackScore = getScore(getBlack(_grid));
+  var whiteScore = getScore(getWhite(_grid));
+
+  console.log("Scores:", blackScore, whiteScore, move)
+
+  return col == WHITE ? whiteScore - blackScore : blackScore - whiteScore;
+}
+
+function MovePiece(currX, currY, pressedX, pressedY, Grid) {
   var pieceinoption = Grid[pressedX][pressedY];
 
   var end = Grid[currX][currY].colorName == WHITE ? 0 : rows - 1;
@@ -98,9 +115,7 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, fromsearch = false) {
     }
   }
 
-  if (!fromsearch) {
-    turnColour = turnColour === WHITE ? BLACK : WHITE;
-  }
+  turnColour = turnColour === WHITE ? BLACK : WHITE;
 
   // check if enemy king is in check
   for (var i = 0; i < Grid.length; i++) {
@@ -127,19 +142,4 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, fromsearch = false) {
   options = [];
 
   option.piece = pieceinoption
-
-  previousMoves.push(option)
-}
-var prev = grid
-
-function UndoMove() {
-  console.log(previousMoves)
-  if (previousMoves.length > 0) {
-    var last = previousMoves[previousMoves.length - 1]
-    var { endX, endY } = last
-    console.log(last.piece)
-    var end = grid[endX][endY]
-    grid[endX][endY] = last.piece
-
-  }
 }

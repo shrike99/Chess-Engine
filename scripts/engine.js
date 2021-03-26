@@ -6,12 +6,7 @@ var pieceScores = [
   ["Queen", 9],
 ];
 
-
-function Search(depth, col) {
-  if (depth == 0) {
-    return Evaluate(col, grid);
-  }
-
+function getAllMoves(col) {
   var Pieces = [];
 
   for (i = 0; i < grid.length; i++) {
@@ -32,23 +27,42 @@ function Search(depth, col) {
     findMoves(x, y);
 
     if (options.length != 0) {
-      pieceMovesList.push([current, options]);
+      pieceMovesList.push([current, options, grid[x][y]]);
     }
     options = [];
   }
 
+  return pieceMovesList;
+}
+
+time = 0
+
+
+function Search(depth, col) {
+  // if (depth == 0) {
+  //   return Evaluate(col, grid);
+  // }
+
+  /*
+  
+  [x1,y1]
+  [Move, Move]
+  [Type]
+  
+  */
+
+  var pieceMovesList = getAllMoves(col)
+
   var othercol = col == WHITE ? BLACK : WHITE;
+
+
 
   if (pieceMovesList.length == 0) {
     //MATE
-    if (inCheck == othercol) {
-      if (options.length == 0) {
-        document.getElementById(
-          "check"
-        ).innerText = `THE COMPUTER was mated ):`;
-        stopGame = true;
-        return -200;
-      }
+    if (Mate()) {
+      document.getElementById("check").innerText = `THE COMPUTER was mated ):`;
+      stopGame = true;
+      return -200;
     }
     //STALEMATE
     else {
@@ -60,69 +74,47 @@ function Search(depth, col) {
 
   var best = Number.NEGATIVE_INFINITY;
 
+  console.log("l", pieceMovesList)
+
   for (i = 0; i < pieceMovesList.length; i++) {
-    var x = pieceMovesList[i][0][0];
-    var y = pieceMovesList[i][0][1];
-
     for (j = 0; j < pieceMovesList[i][1].length; j++) {
-      var x2 = pieceMovesList[i][1][j].x;
-      var y2 = pieceMovesList[i][1][j].y;
+      if (time < 500) {
+        var x = pieceMovesList[i][0][0];
+        var y = pieceMovesList[i][0][1];
 
-      options.push(pieceMovesList[i][1][j]);
+        var eval = EvaluateMove(x, y, pieceMovesList[i][1][j], col, deepclone(grid))
 
-      MovePiece(x, y, x2, y2, grid, true);
+        console.log(eval)
 
-      var evaluate = -Search(depth - 1, othercol);
+        best = eval > best ? eval : best
+        time++
+      }
 
-      UndoMove();
-
-      best = Math.max(evaluate, best);
     }
-  }
 
+
+
+
+    // for (j = 0; j < pieceMovesList[i][1].length; j++) {
+    //   var x2 = pieceMovesList[i][1][j].x;
+    //   var y2 = pieceMovesList[i][1][j].y;
+
+    //   options.push(pieceMovesList[i][1][j]);
+
+    //   MovePiece(x, y, x2, y2, grid, true);
+
+    //   var evaluate = -Search(depth - 1, othercol);
+
+    //   //UndoMove();
+
+    //   best = Math.max(evaluate, best);
+    // }
+  }
+  console.log("BEST:", best)
   return best;
 }
 
-function Evaluate(col, grid) {
-  var blackScore = 0;
-  var whiteScore = 0;
 
-  var blackPieces = [];
-
-  for (i = 0; i < grid.length; i++) {
-    for (j = 0; j < grid[i].length; j++) {
-      if (grid[i][j] != undefined && grid[i][j].colorName == BLACK) {
-        blackPieces.push(grid[i][j]);
-      }
-    }
-  }
-
-  var whitePieces = [];
-
-  for (i = 0; i < grid.length; i++) {
-    for (j = 0; j < grid[i].length; j++) {
-      if (grid[i][j] != undefined && grid[i][j].colorName == WHITE) {
-        whitePieces.push(grid[i][j]);
-      }
-    }
-  }
-
-  for (i = 0; i < grid.length; i++) {
-    var piece = pieceScores.find((x) => x[0] == blackPieces[i].type);
-    if (piece != undefined) {
-      blackScore += piece[1];
-    }
-  }
-
-  for (i = 0; i < grid.length; i++) {
-    var piece = pieceScores.find((x) => x[0] == whitePieces[i].type);
-    if (piece != undefined) {
-      whiteScore += piece[1];
-    }
-  }
-
-  return col == WHITE ? whiteScore - blackScore : blackScore - whiteScore;
-}
 
 function findHighest(arr) {
   var highestI = 0;
