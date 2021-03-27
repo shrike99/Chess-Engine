@@ -227,7 +227,7 @@ class King extends Piece {
 
     // castling
 
-    if (!this.moved && inCheck !== turnColour) {
+    if (!this.moved && grid.inCheck !== turnColour) {
       let testI = i + 1;
       while (testI < columns) {
         if (!isOpen(testI, j)) {

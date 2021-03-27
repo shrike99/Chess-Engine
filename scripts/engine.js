@@ -16,7 +16,6 @@ function getAllMoves(col) {
       }
     }
   }
-
   var pieceMovesList = [];
 
   for (i = 0; i < Pieces.length; i++) {
@@ -55,11 +54,9 @@ function Search(depth, col) {
 
   var othercol = col == WHITE ? BLACK : WHITE;
 
-
-
   if (pieceMovesList.length == 0) {
     //MATE
-    if (Mate()) {
+    if (Mate(col, grid.inCheck)) {
       document.getElementById("check").innerText = `THE COMPUTER was mated ):`;
       stopGame = true;
       return -200;
@@ -73,27 +70,26 @@ function Search(depth, col) {
   }
 
   var best = Number.NEGATIVE_INFINITY;
+  var chosen = null
 
-  console.log("l", pieceMovesList)
 
-  for (i = 0; i < pieceMovesList.length; i++) {
-    for (j = 0; j < pieceMovesList[i][1].length; j++) {
-      if (time < 500) {
-        var x = pieceMovesList[i][0][0];
-        var y = pieceMovesList[i][0][1];
+  for (iI = 0; iI < pieceMovesList.length; iI++) {
+    for (jI = 0; jI < pieceMovesList[iI][1].length; jI++) {
 
-        var eval = EvaluateMove(x, y, pieceMovesList[i][1][j], col, deepclone(grid))
+      var curr = pieceMovesList[iI][1][jI]
+      var x = pieceMovesList[iI][0][0];
+      var y = pieceMovesList[iI][0][1];
 
-        console.log(eval)
+      var clone = deepclone(grid)
 
-        best = eval > best ? eval : best
-        time++
+      var eval = EvaluateMove(x, y, curr, col, clone)
+
+      best = Math.max(eval, best)
+
+      if (best == eval) {
+        chosen = [[x, y], curr]
       }
-
     }
-
-
-
 
     // for (j = 0; j < pieceMovesList[i][1].length; j++) {
     //   var x2 = pieceMovesList[i][1][j].x;
@@ -110,7 +106,15 @@ function Search(depth, col) {
     //   best = Math.max(evaluate, best);
     // }
   }
+
+
+
   console.log("BEST:", best)
+
+  var { endX, endY } = chosen[1]
+
+  MovePiece(chosen[0][0], chosen[0][1], endX, endY, grid, chosen[1])
+
   return best;
 }
 

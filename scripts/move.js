@@ -47,21 +47,23 @@ function findMoves(pressedX, pressedY) {
 function EvaluateMove(x1, y1, move, col, _grid) {
 
   var { endX, endY } = move
+
   var piece = _grid[x1][y1]
 
   _grid[endX][endY] = piece
 
-  piece = null
+  _grid[x1][y1] = null
 
-  var blackScore = getScore(getBlack(_grid));
-  var whiteScore = getScore(getWhite(_grid));
+  var black = getBlack(_grid)
+  var white = getWhite(_grid)
 
-  console.log("Scores:", blackScore, whiteScore, move)
+  var blackScore = getScore(black);
+  var whiteScore = getScore(white);
 
   return col == WHITE ? whiteScore - blackScore : blackScore - whiteScore;
 }
 
-function MovePiece(currX, currY, pressedX, pressedY, Grid) {
+function MovePiece(currX, currY, pressedX, pressedY, Grid, option) {
   var pieceinoption = Grid[pressedX][pressedY];
 
   var end = Grid[currX][currY].colorName == WHITE ? 0 : rows - 1;
@@ -72,7 +74,7 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid) {
 
   Grid[currX][currY].moved = true;
 
-  const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
+  //const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
 
   if (Grid[currX][currY].type == "Pawn" && (pressedY == currX + 2 || pressedY == currY - 2)) {
     canEnPassant = true;
@@ -126,12 +128,12 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid) {
         Grid[i][j].colorName === turnColour
       ) {
         if (isBeingAttacked(turnColour, i, j)) {
-          inCheck = turnColour;
+          grid.inCheck = turnColour;
           document.getElementById(
             "check"
           ).innerText = `${turnColour} is in check`
         } else {
-          inCheck = null;
+          grid.inCheck = null;
           document.getElementById("check").innerText = `${turnColour}'s turn`;
         }
         break;

@@ -26,7 +26,7 @@ var options = [];
 var current = [];
 
 // team in check
-var inCheck = null;
+grid.inCheck = null
 
 // initial turn
 var turnColour = WHITE;
@@ -126,16 +126,18 @@ function mouseClicked() {
       findMoves(pressedX, pressedY);
     }
 
-    //MOVES HAVE ALREADY BEEN FOUND SQUARE
+    //MOVES HAVE ALREADY BEEN FOUND
 
     if (options.some((x) => x.endX === pressedX && x.endY === pressedY)) {
-      MovePiece(current[0], current[1], pressedX, pressedY, grid);
+      const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
+      MovePiece(current[0], current[1], pressedX, pressedY, grid, option);
     }
   }
 }
 
 function computerTurn() {
-  randomMove();
+  // randomMove();
+  Search(20, BLACK)
   turnColour = WHITE;
 }
 
@@ -183,18 +185,16 @@ function randomMove() {
 
   if (pieceMovesList.length == 0) {
     //MATE
-    if (inCheck == BLACK) {
-      if (options.length == 0) {
-        document.getElementById("check").innerText = `THE COMPUTER was mated ):`;
-        stopGame = true;
-        return;
-      }
+    if (Mate(col, grid.inCheck)) {
+      document.getElementById("check").innerText = `THE COMPUTER was mated ):`;
+      stopGame = true;
+      return -200;
     }
     //STALEMATE
     else {
       document.getElementById("check").innerText = `STALEMATE ):`;
       stopGame = true;
-      return;
+      return -100;
     }
   }
 
@@ -222,7 +222,11 @@ function randomMove() {
 
   options.push(selectedMove);
 
-  MovePiece(selectedPiece[0], selectedPiece[1], selectedMove.endX, selectedMove.endY, grid);
+  var { endX, endY } = selectedMove
+
+  const option = options.find((x) => x.endX === endX && x.endY === endY);
+
+  MovePiece(selectedPiece[0], selectedPiece[1], endX, endY, grid, option);
 }
 
 function randm(min, max) {

@@ -69,7 +69,7 @@ function getBlack(_grid) {
 
 function getScore(pieces) {
   score = 0
-  for (i = 0; i < grid.length; i++) {
+  for (i = 0; i < pieces.length; i++) {
     var piece = pieceScores.find((x) => x[0] == pieces[i].type);
     if (piece != undefined) {
       score += piece[1];
@@ -89,8 +89,8 @@ function deepclone(grid) {
   return clone
 }
 
-function Mate() {
-  if (inCheck == othercol) {
+function Mate(col, inCheck) {
+  if (inCheck == col) {
     if (options.length == 0) {
       return true
     }
