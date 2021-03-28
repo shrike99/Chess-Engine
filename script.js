@@ -14,8 +14,8 @@ var black_bishop;
 const columns = 8;
 const rows = 8;
 
-const WIDTH = 632;
-const HEIGHT = 632;
+const WIDTH = 640;
+const HEIGHT = 640;
 
 const w = WIDTH / columns;
 const h = HEIGHT / rows;
@@ -79,7 +79,7 @@ function setup() {
   black_bishop = loadImage("images/black_bishop.png");
   white_bishop = loadImage("images/white_bishop.png");
   initGrid(grid);
-  createCanvas(WIDTH, HEIGHT);
+  var cnv = createCanvas(WIDTH, HEIGHT);
 }
 
 function draw() {
@@ -104,7 +104,7 @@ function draw() {
     circle(options[i].endX * w + w / 2, options[i].endY * h + h / 2, w - 60);
   }
 
-  if (turnColour == BLACK && !stopGame) {
+  if (turnColour == computerCol && !stopGame) {
     computerTurn();
   }
 }
@@ -137,8 +137,8 @@ function mouseClicked() {
 }
 
 function computerTurn() {
-  // randomMove();
-  Search(20, BLACK)
+  randomMove();
+  //Search(20, BLACK)
   turnColour = WHITE;
 }
 

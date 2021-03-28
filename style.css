@@ -1,10 +1,17 @@
+@font-face {
+	font-family: "intersemi_bold";
+	src: url("fonts/rasmusandersson-inter-semi-bold-webfont.woff2") format("woff2"), url("fonts/rasmusandersson-inter-semi-bold-webfont.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+}
+
 html,
 body {
 	margin: 0;
 	padding: 0;
 	background-color: #0b0e11;
 }
-
+/* 
 canvas {
 	display: flex;
 	justify-content: center;
@@ -12,14 +19,28 @@ canvas {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-}
+} */
 
 #gameBackground {
 	border-radius: 10px;
 	padding: 10px;
 	width: 651px;
 	height: 651px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background: #151a21;
+}
+
+#playingAgainst {
+	flex-direction: column;
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	font-size: 25px;
+	font-family: inter;
+	color: white;
 }
 
 #gameInfo {
@@ -36,6 +57,10 @@ canvas {
 	justify-content: center;
 	align-items: center;
 	height: 100vh;
+}
+
+.red {
+	color: #fd4d4d;
 }
 
 .top-left {
