@@ -110,6 +110,12 @@ function isLowerCase(n) {
   return n === n.toLowerCase();
 }
 
+function isOpen(i, j, Grid = grid) {
+  if (0 <= i && i < columns) {
+    return !(Grid[i][j] instanceof Piece);
+  } else return true;
+}
+
 //bool
 function isBeingAttackedMain(colorName, i, j) {
   // check for knights attacking

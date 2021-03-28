@@ -5,12 +5,6 @@ const CASTLE = "CASTLE";
 
 const ENPASSANT = "ENPASSANT";
 
-function isOpen(i, j) {
-  if (0 <= i && i < columns) {
-    return !(grid[i][j] instanceof Piece);
-  } else return true;
-}
-
 function hasEnemy(myColor, i, j) {
   const enemyColor = myColor === BLACK ? WHITE : BLACK;
   return grid[i][j] instanceof Piece && grid[i][j].colorName === enemyColor;

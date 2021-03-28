@@ -37,6 +37,7 @@ var canEnPassant = false;
 
 var enPassantCoords;
 
+var computerCol = BLACK
 
 var previousMoves = []
 

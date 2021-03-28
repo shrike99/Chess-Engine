@@ -44,6 +44,16 @@ function findMoves(pressedX, pressedY) {
   console.log("Took", seconds);
 }
 
+function EvaluatePosition(grid, col = computerCol) {
+  var black = getBlack(grid)
+  var white = getWhite(grid)
+
+  var blackScore = getScore(black);
+  var whiteScore = getScore(white);
+
+  return col == WHITE ? whiteScore - blackScore : blackScore - whiteScore;
+}
+
 function EvaluateMove(x1, y1, move, col, _grid) {
 
   var { endX, endY } = move
@@ -122,16 +132,10 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option) {
   // check if enemy king is in check
   for (var i = 0; i < Grid.length; i++) {
     for (var j = 0; j < Grid[i].length; j++) {
-      if (
-        !isOpen(i, j) &&
-        Grid[i][j].type === "King" &&
-        Grid[i][j].colorName === turnColour
-      ) {
+      if (!isOpen(i, j, Grid) && Grid[i][j].type === "King" && Grid[i][j].colorName === turnColour) {
         if (isBeingAttacked(turnColour, i, j)) {
           grid.inCheck = turnColour;
-          document.getElementById(
-            "check"
-          ).innerText = `${turnColour} is in check`
+          document.getElementById("check").innerText = `${turnColour} is in check`
         } else {
           grid.inCheck = null;
           document.getElementById("check").innerText = `${turnColour}'s turn`;

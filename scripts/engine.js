@@ -6,12 +6,12 @@ var pieceScores = [
   ["Queen", 9],
 ];
 
-function getAllMoves(col) {
+function getAllMoves(col, Grid = grid) {
   var Pieces = [];
 
-  for (i = 0; i < grid.length; i++) {
-    for (j = 0; j < grid[i].length; j++) {
-      if (grid[i][j] != undefined && grid[i][j].colorName == col) {
+  for (i = 0; i < Grid.length; i++) {
+    for (j = 0; j < Grid[i].length; j++) {
+      if (Grid[i][j] != undefined && Grid[i][j].colorName == col) {
         Pieces.push([i, j]);
       }
     }
@@ -26,7 +26,7 @@ function getAllMoves(col) {
     findMoves(x, y);
 
     if (options.length != 0) {
-      pieceMovesList.push([current, options, grid[x][y]]);
+      pieceMovesList.push([current, options, Grid[x][y]]);
     }
     options = [];
   }
@@ -34,8 +34,40 @@ function getAllMoves(col) {
   return pieceMovesList;
 }
 
-time = 0
+function SearchWithin(x, y, move, col, depth, grid) {
 
+  if (depth == 0) {
+    return EvaluatePosition(grid)
+  }
+
+  var othercol = col == WHITE ? BLACK : WHITE;
+
+  var { endX, endY } = move
+
+  MovePiece(x, y, endX, endY, deepclone(grid), move)
+
+  //var eval = EvaluateMove(x, y, move, othercol, grid)
+  var pieceMovesList = getAllMoves(col, grid)
+  pieceMovesList.forEach(element => {
+    element[1].forEach(curr => {
+      var currX = element[0][0];
+      var currY = element[0][1];
+      SearchWithin(currX, currY, curr, othercol, depth - 1, deepclone(grid))
+    })
+  })
+  // for (iII = 0; iII < pieceMovesList.length; iII++) {
+  //   for (jII = 0; jII < pieceMovesList[iII][1].length; jII++) {
+
+  //     var curr = pieceMovesList[iII][1][jII]
+  //     var currX = pieceMovesList[iII][0][0];
+  //     var currY = pieceMovesList[iII][0][1];
+
+
+  //     SearchWithin(currX, currY, curr, othercol, depth - 1, deepclone(grid))
+  //   }
+  // }
+
+}
 
 function Search(depth, col) {
   // if (depth == 0) {
@@ -51,8 +83,6 @@ function Search(depth, col) {
   */
 
   var pieceMovesList = getAllMoves(col)
-
-  var othercol = col == WHITE ? BLACK : WHITE;
 
   if (pieceMovesList.length == 0) {
     //MATE
@@ -82,7 +112,9 @@ function Search(depth, col) {
 
       var clone = deepclone(grid)
 
-      var eval = EvaluateMove(x, y, curr, col, clone)
+      //var eval = EvaluateMove(x, y, curr, col, clone)
+
+      var eval = SearchWithin(x, y, curr, col, depth, clone)
 
       best = Math.max(eval, best)
 
