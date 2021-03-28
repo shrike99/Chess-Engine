@@ -1,25 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Chess</title>
-    </head>
 
-    <body>
-        <p id="check">White's turn</p>
-        <input id="rangeInput" type="range" min="0" max="40" value="20" oninput="amount.value=rangeInput.value" />
-        <input id="amount" type="number" value="20" min="0" max="40" oninput="rangeInput.value=amount.value" />
-        <!-- <label for="fen">Load from FEN</label><br>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <p id="check">White's turn</p>
+    <div class="centered" id="backgroundHidden">
+        <div id="gameBackground">
+
+        </div>
+        <div id="gameInfo" style="background-color: white;">
+
+        </div>
+    </div>
+
+    <input id="rangeInput" type="range" min="0" max="40" value="20" oninput="amount.value=rangeInput.value" />
+    <input id="amount" type="number" value="20" min="0" max="40" oninput="rangeInput.value=amount.value" />
+    <button style="margin-bottom: 20px;" onclick="Eval()" id="button">Eval</button>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.3.0/lib/p5.js"></script>
+    <script src="./scripts/move.js"></script>
+    <script src="./scripts/engine.js"></script>
+    <script src="./scripts/util.js"></script>
+    <script src="./scripts/classes.js"></script>
+    <script src="./script.js"></script>
+
+
+
+    <!-- <label for="fen">Load from FEN</label><br>
   <input type="text" id="fen" name="fen" value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1 1"><br>
   <button onclick="load()" id="button">Load</button> -->
-        <button style="margin-bottom: 20px;" onclick="Eval()" id="button">Eval</button>
-        <script src="https://cdn.jsdelivr.net/npm/p5@1.3.0/lib/p5.js"></script>
-        <script src="./scripts/move.js"></script>
-        <script src="./scripts/engine.js"></script>
-        <script src="./scripts/util.js"></script>
-        <script src="./scripts/classes.js"></script>
-        <script src="./script.js"></script>
-    </body>
+</body>
+
 </html>

@@ -14,8 +14,8 @@ var black_bishop;
 const columns = 8;
 const rows = 8;
 
-const WIDTH = 600;
-const HEIGHT = 600;
+const WIDTH = 632;
+const HEIGHT = 632;
 
 const w = WIDTH / columns;
 const h = HEIGHT / rows;
@@ -65,7 +65,6 @@ function load() {
     }
   }
 }
-
 function setup() {
   black_king_img = loadImage("images/black_king.png");
   white_king_img = loadImage("images/white_king.png");
@@ -88,11 +87,12 @@ function draw() {
   for (var i = 0; i < grid.length; i++) {
     for (var j = 0; j < grid[i].length; j++) {
       if (i % 2 !== j % 2) {
-        fill(60);
+        fill("#313B48");
       } else {
-        fill(220);
+        fill("#212934");
       }
       noStroke();
+
       rect(i * w, j * h, w, h);
       if (grid[i][j] instanceof Piece) {
         grid[i][j].draw(i, j);
@@ -100,8 +100,8 @@ function draw() {
     }
   }
   for (var i = 0; i < options.length; i++) {
-    fill(0, 255, 0, 100);
-    circle(options[i].endX * w + w / 2, options[i].endY * h + h / 2, w - 55);
+    fill("#FD6868");
+    circle(options[i].endX * w + w / 2, options[i].endY * h + h / 2, w - 60);
   }
 
   if (turnColour == BLACK && !stopGame) {

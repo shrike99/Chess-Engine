@@ -1,8 +1,64 @@
-html, body {
-  margin: 0;
-  padding: 0;
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #0b0e11;
 }
 
 canvas {
-  display: block;
+	display: flex;
+	justify-content: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+#gameBackground {
+	border-radius: 10px;
+	padding: 10px;
+	width: 651px;
+	height: 651px;
+	background: #151a21;
+}
+
+#gameInfo {
+	border-radius: 10px;
+	margin-left: 50px;
+	padding: 10px;
+	width: 300px;
+	height: 651px;
+	background: #151a21;
+}
+
+#backgroundHidden {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.top-left {
+	border-radius: 10px 0px 0px 0px;
+}
+
+.top-right {
+	border-radius: 0px 10px 0px 0px;
+}
+
+.white {
+	background: #313b48;
+}
+
+.black {
+	background: #212934;
+}
+
+.centered {
+	display: flex;
+	justify-content: center;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
