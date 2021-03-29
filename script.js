@@ -112,6 +112,11 @@ function setup() {
   timerInc.innerText = "+" + increment
   setInterval(timerComputer, 1000);
   setInterval(timerHuman, 1000);
+  var time = formatTime(timeComp);
+  timerComp.innerText = time
+
+  var time2 = formatTime(timeHum);
+  timerHum.innerText = time2
 }
 
 function draw() {
