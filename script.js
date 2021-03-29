@@ -14,8 +14,8 @@ var black_bishop;
 const columns = 8;
 const rows = 8;
 
-var timeComp = 180
-var timeHum = 180
+var timeComp = 300
+var timeHum = 300
 
 var increment = 3
 
@@ -71,7 +71,19 @@ function load() {
   }
 }
 
-function timerCountDown() {
+function timerHuman() {
+  if (stopGame) {
+    return;
+  }
+  if (turnColour != computerCol) {
+    timeHum--
+    var time = formatTime(timeHum);
+    timerHum.innerText = time
+  }
+}
+
+function timerComputer() {
+  console.log(turnColour)
   if (stopGame) {
     return;
   }
@@ -79,11 +91,6 @@ function timerCountDown() {
     timeComp--
     var time = formatTime(timeComp);
     timerComp.innerText = time
-  }
-  else {
-    timeHum--
-    var time = formatTime(timeHum);
-    timerHum.innerText = time
   }
 }
 
@@ -103,7 +110,8 @@ function setup() {
   initGrid(grid);
   var cnv = createCanvas(WIDTH, HEIGHT);
   timerInc.innerText = "+" + increment
-  setInterval(timerCountDown, 1000);
+  setInterval(timerComputer, 1000);
+  setInterval(timerHuman, 1000);
 }
 
 function draw() {
@@ -160,7 +168,9 @@ function mouseClicked() {
   }
 }
 
-function computerTurn() {
+// const delay = ms => new Promise(res => setTimeout(res, ms))
+
+async function computerTurn() {
   randomMove();
   //Search(20, BLACK)
   turnColour = WHITE;
