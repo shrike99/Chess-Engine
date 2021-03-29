@@ -73,7 +73,7 @@ function EvaluateMove(x1, y1, move, col, _grid) {
   return col == WHITE ? whiteScore - blackScore : blackScore - whiteScore;
 }
 
-function MovePiece(currX, currY, pressedX, pressedY, Grid, option) {
+function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching = false) {
   var pieceinoption = Grid[pressedX][pressedY];
 
   var end = Grid[currX][currY].colorName == WHITE ? 0 : rows - 1;
@@ -127,7 +127,16 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option) {
     }
   }
 
-  turnColour = turnColour === WHITE ? BLACK : WHITE;
+  if (!issearching) {
+    turnColour = turnColour === WHITE ? BLACK : WHITE;
+    if (turnColour == computerCol) {
+      timeComp += increment
+    }
+    else {
+      timeHum += increment
+    }
+  }
+
 
   // check if enemy king is in check
   for (var i = 0; i < Grid.length; i++) {

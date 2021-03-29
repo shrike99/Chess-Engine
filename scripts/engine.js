@@ -44,7 +44,7 @@ function SearchWithin(x, y, move, col, depth, grid) {
 
   var { endX, endY } = move
 
-  MovePiece(x, y, endX, endY, deepclone(grid), move)
+  MovePiece(x, y, endX, endY, deepclone(grid), move, true)
 
   //var eval = EvaluateMove(x, y, move, othercol, grid)
   var pieceMovesList = getAllMoves(col, grid)

@@ -16,13 +16,25 @@
             <main></main>
         </div>
         <div id="gameInfo">
-            <p id="playingAgainst">Playing against<b class="red" style="margin-left: 10px;margin-top: 5px;">Computer</b></p>
+            <div>
+                <p id="playingAgainst">Playing against<b class="red" style="margin-left: 10px;margin-top: 0px;">Computer</b></p>
+                <div>
+                    <b id="depth">Depth (20)</b>
+                    <input id="depthInput" class="slider" type="range" min="0" max="40" value="20" oninput="depth.innerText = `Depth (${depthInput.value})`" />
+                </div>
+                <div id="timerBackground">
+                    <b id="timerComp">3:00</b>
+                    <p id="timerInc">+3</p>
+                    <b id="timerHum">3:00</b>
+                </div>
+            </div>
+            
+            <div id="buttonDiv">
+                <button id="surrender" onclick="Eval()">Surrender</button>
+                <button id="draw">Draw</button>
+            </div>
         </div>
     </div>
-
-    <input id="rangeInput" type="range" min="0" max="40" value="20" oninput="amount.value=rangeInput.value" />
-    <input id="amount" type="number" value="20" min="0" max="40" oninput="rangeInput.value=amount.value" />
-    <button style="margin-bottom: 20px;" onclick="Eval()" id="button">Eval</button>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.3.0/lib/p5.js"></script>
     <script src="./scripts/move.js"></script>
     <script src="./scripts/engine.js"></script>

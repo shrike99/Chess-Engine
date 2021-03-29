@@ -14,6 +14,11 @@ var black_bishop;
 const columns = 8;
 const rows = 8;
 
+var timeComp = 180
+var timeHum = 180
+
+var increment = 3
+
 const WIDTH = 640;
 const HEIGHT = 640;
 
@@ -65,6 +70,23 @@ function load() {
     }
   }
 }
+
+function timerCountDown() {
+  if (stopGame) {
+    return;
+  }
+  if (turnColour == computerCol) {
+    timeComp--
+    var time = formatTime(timeComp);
+    timerComp.innerText = time
+  }
+  else {
+    timeHum--
+    var time = formatTime(timeHum);
+    timerHum.innerText = time
+  }
+}
+
 function setup() {
   black_king_img = loadImage("images/black_king.png");
   white_king_img = loadImage("images/white_king.png");
@@ -80,6 +102,8 @@ function setup() {
   white_bishop = loadImage("images/white_bishop.png");
   initGrid(grid);
   var cnv = createCanvas(WIDTH, HEIGHT);
+  timerInc.innerText = "+" + increment
+  setInterval(timerCountDown, 1000);
 }
 
 function draw() {
@@ -87,9 +111,9 @@ function draw() {
   for (var i = 0; i < grid.length; i++) {
     for (var j = 0; j < grid[i].length; j++) {
       if (i % 2 !== j % 2) {
-        fill("#313B48");
-      } else {
         fill("#212934");
+      } else {
+        fill("#313B48");
       }
       noStroke();
 
@@ -186,7 +210,7 @@ function randomMove() {
 
   if (pieceMovesList.length == 0) {
     //MATE
-    if (Mate(col, grid.inCheck)) {
+    if (Mate(computerCol, grid.inCheck)) {
       document.getElementById("check").innerText = `THE COMPUTER was mated ):`;
       stopGame = true;
       return -200;

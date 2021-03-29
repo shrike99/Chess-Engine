@@ -116,6 +116,13 @@ function isOpen(i, j, Grid = grid) {
   } else return true;
 }
 
+function formatTime(time) {
+  var remaining = time % 60
+  remaining = remaining < 10 ? '0' + remaining.toString() : remaining;
+  time = Math.floor(time / 60)
+  return `${time}:${remaining}`
+}
+
 //bool
 function isBeingAttackedMain(colorName, i, j) {
   // check for knights attacking

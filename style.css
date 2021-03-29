@@ -5,21 +5,29 @@
 	font-style: normal;
 }
 
+:root {
+	--mainred: #fd4d4d;
+	--shadered: #fd6868;
+}
+
+button {
+	border-radius: 5px;
+	cursor: pointer;
+	background-color: var(--shadered);
+	border: none;
+	outline: none;
+}
+
+button:hover {
+	background: var(--mainred);
+}
+
 html,
 body {
 	margin: 0;
 	padding: 0;
 	background-color: #0b0e11;
 }
-/* 
-canvas {
-	display: flex;
-	justify-content: center;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-} */
 
 #gameBackground {
 	border-radius: 10px;
@@ -43,8 +51,93 @@ canvas {
 	color: white;
 }
 
+#surrender {
+	margin-bottom: 20px;
+	vertical-align: bottom;
+	font-size: 15px;
+	width: 40%;
+	height: 40px;
+	font-family: inter;
+	color: white;
+}
+
+#draw {
+	float: right;
+	margin-bottom: 20px;
+	vertical-align: bottom;
+	font-size: 15px;
+	width: 40%;
+	height: 40px;
+	font-family: inter;
+	color: white;
+}
+
+#depth {
+	/* margin-top: 30px; */
+	margin-bottom: 20px;
+	flex-direction: column;
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	font-family: inter;
+	color: white;
+}
+
+#timerComp {
+	vertical-align: top;
+	margin-top: 15px;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	font-size: 25px;
+	font-family: inter;
+	color: white;
+}
+
+#timerHum {
+	vertical-align: bottom;
+	margin-bottom: 15px;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	font-size: 25px;
+	font-family: inter;
+	color: white;
+}
+
+#timerInc {
+	vertical-align: center;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	font-family: inter;
+	color: var(--shadered);
+}
+
+#timerBackground {
+	flex-direction: column;
+	display: flex;
+	width: 300px;
+	margin-top: 25px;
+	height: 150px;
+	border-radius: 10px;
+	background: #212934;
+}
+
+#buttonDiv {
+	/* margin-bottom: 10px; */
+	flex-direction: row;
+	vertical-align: bottom;
+}
+
 #gameInfo {
 	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	margin-left: 50px;
 	padding: 10px;
 	width: 300px;
@@ -60,7 +153,7 @@ canvas {
 }
 
 .red {
-	color: #fd4d4d;
+	color: var(--mainred);
 }
 
 .top-left {
@@ -86,4 +179,34 @@ canvas {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+
+.slider {
+	-webkit-appearance: none;
+	height: 15px;
+	width: 300px;
+	border-radius: 10px;
+	background: #212934;
+	outline: none;
+	opacity: 0.7;
+	-webkit-transition: 0.2s;
+	transition: opacity 0.2s;
+}
+
+.slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background: #313b48;
+	cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	background: #313b48;
+	cursor: pointer;
 }
