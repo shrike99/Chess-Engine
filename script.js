@@ -83,7 +83,6 @@ function timerHuman() {
 }
 
 function timerComputer() {
-  console.log(turnColour)
   if (stopGame) {
     return;
   }
@@ -128,6 +127,11 @@ function draw() {
       } else {
         fill("#313B48");
       }
+
+      if (!isOpen(i, j) && grid.inCheck == grid[i][j].colorName && grid[i][j].type == "King") {
+        fill("#FD4D4D");
+      }
+
       noStroke();
 
       rect(i * w, j * h, w, h);

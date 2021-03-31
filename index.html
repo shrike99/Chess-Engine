@@ -10,31 +10,37 @@
 </head>
 
 <body>
-    <p id="check">White's turn</p>
-    <div id="backgroundHidden">
-        <div id="gameBackground">
-            <main></main>
-        </div>
-        <div id="gameInfo">
+    <div id="mainDiv">
+        <p id="check">White's turn</p>
+        <div id="backgroundHidden">
             <div>
-                <p id="playingAgainst">Playing against<b class="red" style="margin-left: 10px;margin-top: 0px;">Computer</b></p>
-                <div>
-                    <b id="depth">Depth (20)</b>
-                    <input id="depthInput" class="slider" type="range" min="0" max="40" value="20" oninput="depth.innerText = `Depth (${depthInput.value})`" />
+                <div id="gameBackground">
+                    <main></main>
                 </div>
-                <div id="timerBackground">
-                    <b id="timerComp"></b>
-                    <p id="timerInc"></p>
-                    <b id="timerHum"></b>
+            </div>
+            <div id="gameInfo">
+                <div>
+                    <p id="playingAgainst">Playing against<b class="red" style="margin-left: 10px;margin-top: 0px;">Computer</b></p>
+                    <div>
+                        <b id="depth">Depth (20)</b>
+                        <input id="depthInput" class="slider" type="range" min="0" max="40" value="20" oninput="depth.innerText = `Depth (${depthInput.value})`" />
+                    </div>
+                    <div id="timerBackground">
+                        <b id="timerComp"></b>
+                        <p id="timerInc"></p>
+                        <b id="timerHum"></b>
+                    </div>
+                </div>
+                
+                <div id="buttonDiv">
+                    <button id="surrender" onclick="Eval()">Surrender</button>
+                    <button id="draw">Draw</button>
                 </div>
             </div>
             
-            <div id="buttonDiv">
-                <button id="surrender" onclick="Eval()">Surrender</button>
-                <button id="draw">Draw</button>
-            </div>
         </div>
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/p5@1.3.0/lib/p5.js"></script>
     <script src="./scripts/move.js"></script>
     <script src="./scripts/engine.js"></script>

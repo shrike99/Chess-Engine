@@ -51,6 +51,8 @@ function EvaluatePosition(grid, col = computerCol) {
   var blackScore = getScore(black);
   var whiteScore = getScore(white);
 
+  console.log("EVALUATION FOUND:", col == WHITE ? whiteScore - blackScore : blackScore - whiteScore)
+
   return col == WHITE ? whiteScore - blackScore : blackScore - whiteScore;
 }
 

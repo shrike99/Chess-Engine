@@ -35,6 +35,7 @@ body {
 	width: 651px;
 	height: 651px;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	background: #151a21;
@@ -139,17 +140,42 @@ body {
 	flex-direction: column;
 	justify-content: space-between;
 	margin-left: 50px;
+	vertical-align: bottom;
 	padding: 20px 20px 0px 20px;
 	width: 300px;
 	height: 651px;
 	background: #151a21;
 }
 
+#mainDiv {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+#check {
+	margin-bottom: 80px;
+	margin-top: 50px;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	font-size: 25px;
+	font-family: inter;
+	font-weight: bold;
+	color: white;
+}
+
 #backgroundHidden {
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	/* align-items: center; */
 	height: 100vh;
+}
+
+.flexrow {
+	flex-direction: row;
+	display: flex;
 }
 
 .red {
