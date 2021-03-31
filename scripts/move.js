@@ -130,12 +130,20 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching =
   }
 
   if (!issearching) {
-    turnColour = turnColour === WHITE ? BLACK : WHITE;
-    if (turnColour == computerCol) {
-      timeComp += increment
+    if (turnColour == BLACK) {
+      whiteTimerStart()
     }
     else {
-      timeHum += increment
+      blackTimerStart()
+    }
+    turnColour = turnColour === WHITE ? BLACK : WHITE;
+    if (turnColour == WHITE) {
+      timeWhite += increment
+      timerWhite.innerText = formatTime(timeWhite)
+    }
+    else {
+      timeBlack += increment
+      timerBlack.innerText = formatTime(timeBlack)
     }
   }
 

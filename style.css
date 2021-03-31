@@ -86,7 +86,7 @@ body {
 	color: white;
 }
 
-#timerComp {
+#timerBlack {
 	vertical-align: top;
 	margin-top: 15px;
 	text-align: center;
@@ -97,7 +97,7 @@ body {
 	color: white;
 }
 
-#timerHum {
+#timerWhite {
 	vertical-align: bottom;
 	margin-bottom: 15px;
 	text-align: center;

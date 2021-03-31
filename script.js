@@ -14,11 +14,6 @@ var black_bishop;
 const columns = 8;
 const rows = 8;
 
-var timeComp = 300
-var timeHum = 300
-
-var increment = 3
-
 const WIDTH = 640;
 const HEIGHT = 640;
 
@@ -71,28 +66,6 @@ function load() {
   }
 }
 
-function timerHuman() {
-  if (stopGame) {
-    return;
-  }
-  if (turnColour != computerCol) {
-    timeHum--
-    var time = formatTime(timeHum);
-    timerHum.innerText = time
-  }
-}
-
-function timerComputer() {
-  if (stopGame) {
-    return;
-  }
-  if (turnColour == computerCol) {
-    timeComp--
-    var time = formatTime(timeComp);
-    timerComp.innerText = time
-  }
-}
-
 function setup() {
   black_king_img = loadImage("images/black_king.png");
   white_king_img = loadImage("images/white_king.png");
@@ -109,13 +82,9 @@ function setup() {
   initGrid(grid);
   var cnv = createCanvas(WIDTH, HEIGHT);
   timerInc.innerText = "+" + increment
-  setInterval(timerComputer, 1000);
-  setInterval(timerHuman, 1000);
-  var time = formatTime(timeComp);
-  timerComp.innerText = time
-
-  var time2 = formatTime(timeHum);
-  timerHum.innerText = time2
+  timerBlack.innerText = formatTime(timeBlack)
+  timerWhite.innerText = formatTime(timeWhite)
+  whiteTimerStart()
 }
 
 function draw() {
