@@ -10,6 +10,20 @@
 	--shadered: #fd6868;
 }
 
+input[type="text"],
+select {
+	width: 100%;
+	margin-top: 30px;
+	outline: none;
+	padding: 12px 20px;
+	display: inline-block;
+	border: 0px;
+	color: white;
+	background-color: #1d252e;
+	border-radius: 7px;
+	box-sizing: border-box;
+}
+
 button {
 	border-radius: 5px;
 	cursor: pointer;
@@ -125,7 +139,7 @@ body {
 	margin-top: 25px;
 	height: 150px;
 	border-radius: 10px;
-	background: #212934;
+	background: #1d252e;
 }
 
 #buttonDiv {

@@ -43,21 +43,40 @@ var previousMoves = [];
 
 function load() {
 	var fen = document.getElementById("fen").value;
-	console.log(fen);
 
-	var sections = fen.split("/");
+	var board = new FENBoard(fen).board;
 
-	for (i = 0; i < sections.length; i++) {
-		console.log(sections[i]);
-		for (j = 0; j < sections[i].length; j++) {
+	console.log(board);
+
+	for (i = 0; i < board.length; i++) {
+		for (j = 0; j < board[i].length; j++) {
 			var colour = WHITE;
-			var letters = sections[i].split("");
-			var letter = letters[j];
-			if (isNumeric(letter)) {
-				for (k = j; k < parseInt(letter); k++) {}
-			}
+
+			var letter = board[i][j];
+
 			if (isLowerCase(letter)) {
 				colour = BLACK;
+			}
+			if (letter.toUpperCase() == "N") {
+				grid[i][j] = new Knight(colour);
+			}
+			if (letter.toUpperCase() == "K") {
+				grid[i][j] = new King(colour);
+			}
+			if (letter.toUpperCase() == "P") {
+				grid[i][j] = new Pawn(colour);
+			}
+			if (letter.toUpperCase() == "Q") {
+				grid[i][j] = new Queen(colour);
+			}
+			if (letter.toUpperCase() == "B") {
+				grid[i][j] = new Bishop(colour);
+			}
+			if (letter.toUpperCase() == "R") {
+				grid[i][j] = new Rook(colour);
+			}
+			if (letter == "") {
+				grid[i][j] = null;
 			}
 		}
 	}
@@ -163,7 +182,7 @@ function removeArr(arr, element) {
 function Eval() {
 	//UndoMove();
 	// setGrid(grid);
-	console.log("EVAL:", Search(3, WHITE));
+	console.log("EVAL:", Search(10, WHITE));
 }
 
 function randomMove() {

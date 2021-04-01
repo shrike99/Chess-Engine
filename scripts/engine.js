@@ -60,7 +60,11 @@ function SearchWithin(x, y, move, col, depth, Grid, rootmove = [x, y, move]) {
 		element[1].forEach((curr) => {
 			var currX = element[0][0];
 			var currY = element[0][1];
-			SearchWithin(currX, currY, curr, othercol, depth - 1, deepclone(Grid), rootmove);
+			var eval = -SearchWithin(currX, currY, curr, othercol, depth - 1, deepclone(Grid), rootmove);
+			if (highest < eval) {
+				highest = eval;
+				bestMove = rootmove;
+			}
 		});
 	});
 }
