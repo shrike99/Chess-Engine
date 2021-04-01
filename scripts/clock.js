@@ -1,15 +1,14 @@
 var whiteTimer;
 var blackTimer;
 
-var timeBlack = 10;
-var timeWhite = 10;
+var timeBlack = 150;
+var timeWhite = 150;
 var increment = 3;
 
 function blkTicker() {
 	if (timeBlack > 0) {
 		timeBlack--;
 		var time = formatTime(timeBlack);
-
 		timerBlack.innerText = time;
 	}
 }
@@ -17,7 +16,6 @@ function whtTicker() {
 	if (timeWhite > 0) {
 		timeWhite--;
 		var time = formatTime(timeWhite);
-
 		timerWhite.innerText = time;
 	}
 }

@@ -146,8 +146,9 @@ function mouseClicked() {
 // const delay = ms => new Promise(res => setTimeout(res, ms))
 
 async function computerTurn() {
-	randomMove();
-	//Search(20, BLACK)
+	//randomMove();
+
+	Search(2, BLACK);
 	turnColour = WHITE;
 }
 
@@ -162,7 +163,7 @@ function removeArr(arr, element) {
 function Eval() {
 	//UndoMove();
 	// setGrid(grid);
-	console.log("EVAL:", Search(5, WHITE));
+	console.log("EVAL:", Search(3, WHITE));
 }
 
 function randomMove() {

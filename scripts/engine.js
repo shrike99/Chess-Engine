@@ -11,7 +11,7 @@ function getAllMoves(col, Grid = grid) {
 
 	for (i = 0; i < Grid.length; i++) {
 		for (j = 0; j < Grid[i].length; j++) {
-			if (Grid[i][j] != undefined && Grid[i][j].colorName == col) {
+			if (!isOpen(i, j, Grid) && Grid[i][j].colorName == col) {
 				Pieces.push([i, j]);
 			}
 		}
@@ -23,7 +23,7 @@ function getAllMoves(col, Grid = grid) {
 		var y = Pieces[i][1];
 
 		current = [x, y];
-		findMoves(x, y);
+		findMoves(x, y, Grid);
 
 		if (options.length != 0) {
 			pieceMovesList.push([current, options, Grid[x][y]]);
@@ -34,43 +34,38 @@ function getAllMoves(col, Grid = grid) {
 	return pieceMovesList;
 }
 
-function SearchWithin(x, y, move, col, depth, grid) {
+var highest = -100;
+var bestMove = [];
+
+function SearchWithin(x, y, move, col, depth, Grid, rootmove = [x, y, move]) {
 	if (depth == 0) {
-		return EvaluatePosition(grid);
+		var eval = EvaluatePosition(Grid);
+		if (highest < eval) {
+			highest = eval;
+			bestMove = rootmove;
+		}
+		// console.log("❔ - SearchWithin - eval", eval);
+		return eval;
 	}
 
 	var othercol = col == WHITE ? BLACK : WHITE;
 
 	var { endX, endY } = move;
 
-	MovePiece(x, y, endX, endY, deepclone(grid), move, true);
+	MovePiece(x, y, endX, endY, Grid, move, true);
 
-	//var eval = EvaluateMove(x, y, move, othercol, grid)
-	var pieceMovesList = getAllMoves(col, grid);
+	var pieceMovesList = getAllMoves(othercol, Grid);
+
 	pieceMovesList.forEach((element) => {
 		element[1].forEach((curr) => {
 			var currX = element[0][0];
 			var currY = element[0][1];
-			SearchWithin(currX, currY, curr, othercol, depth - 1, deepclone(grid));
+			SearchWithin(currX, currY, curr, othercol, depth - 1, deepclone(Grid), rootmove);
 		});
 	});
-	// for (iII = 0; iII < pieceMovesList.length; iII++) {
-	//   for (jII = 0; jII < pieceMovesList[iII][1].length; jII++) {
-
-	//     var curr = pieceMovesList[iII][1][jII]
-	//     var currX = pieceMovesList[iII][0][0];
-	//     var currY = pieceMovesList[iII][0][1];
-
-	//     SearchWithin(currX, currY, curr, othercol, depth - 1, deepclone(grid))
-	//   }
-	// }
 }
 
 function Search(depth, col) {
-	// if (depth == 0) {
-	//   return Evaluate(col, grid);
-	// }
-
 	/*
   
   [x1,y1]
@@ -96,7 +91,6 @@ function Search(depth, col) {
 		}
 	}
 
-	var best = Number.NEGATIVE_INFINITY;
 	var chosen = null;
 
 	for (iI = 0; iI < pieceMovesList.length; iI++) {
@@ -109,38 +103,19 @@ function Search(depth, col) {
 
 			//var eval = EvaluateMove(x, y, curr, col, clone)
 
-			var eval = SearchWithin(x, y, curr, col, depth, clone);
-
-			best = Math.max(eval, best);
-
-			if (best == eval) {
-				chosen = [[x, y], curr];
-			}
+			SearchWithin(x, y, curr, col, depth, clone);
 		}
-
-		// for (j = 0; j < pieceMovesList[i][1].length; j++) {
-		//   var x2 = pieceMovesList[i][1][j].x;
-		//   var y2 = pieceMovesList[i][1][j].y;
-
-		//   options.push(pieceMovesList[i][1][j]);
-
-		//   MovePiece(x, y, x2, y2, grid, true);
-
-		//   var evaluate = -Search(depth - 1, othercol);
-
-		//   //UndoMove();
-
-		//   best = Math.max(evaluate, best);
-		// }
 	}
 
-	console.log("BEST:", best);
+	chosen = bestMove;
 
-	var { endX, endY } = chosen[1];
+	var { endX, endY } = chosen[2];
 
-	MovePiece(chosen[0][0], chosen[0][1], endX, endY, grid, chosen[1]);
+	console.log("a");
 
-	return best;
+	MovePiece(chosen[0], chosen[1], endX, endY, grid, chosen[2]);
+
+	return chosen;
 }
 
 function findHighest(arr) {
