@@ -49,7 +49,7 @@ function load() {
 	console.log(board);
 
 	for (i = 0; i < board.length; i++) {
-		for (j = 0; j < board[i].length; j++) {
+		for (j = 0; j < grid[i].length; j++) {
 			var colour = WHITE;
 
 			var letter = board[i][j];
@@ -58,25 +58,25 @@ function load() {
 				colour = BLACK;
 			}
 			if (letter.toUpperCase() == "N") {
-				grid[i][j] = new Knight(colour);
+				grid[j][i] = new Knight(colour);
 			}
 			if (letter.toUpperCase() == "K") {
-				grid[i][j] = new King(colour);
+				grid[j][i] = new King(colour);
 			}
 			if (letter.toUpperCase() == "P") {
-				grid[i][j] = new Pawn(colour);
+				grid[j][i] = new Pawn(colour);
 			}
 			if (letter.toUpperCase() == "Q") {
-				grid[i][j] = new Queen(colour);
+				grid[j][i] = new Queen(colour);
 			}
 			if (letter.toUpperCase() == "B") {
-				grid[i][j] = new Bishop(colour);
+				grid[j][i] = new Bishop(colour);
 			}
 			if (letter.toUpperCase() == "R") {
-				grid[i][j] = new Rook(colour);
+				grid[j][i] = new Rook(colour);
 			}
 			if (letter == "") {
-				grid[i][j] = null;
+				grid[j][i] = null;
 			}
 		}
 	}
