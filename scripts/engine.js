@@ -25,10 +25,10 @@ function getAllMoves(col, Grid = grid) {
 		current = [x, y];
 		findMoves(x, y, Grid);
 
-		if (options.length != 0) {
-			pieceMovesList.push([current, options, Grid[x][y]]);
+		if (Grid.options.length != 0) {
+			pieceMovesList.push([current, Grid.options, Grid[x][y]]);
 		}
-		options = [];
+		Grid.options = [];
 	}
 
 	return pieceMovesList;

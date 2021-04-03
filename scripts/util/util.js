@@ -91,7 +91,7 @@ function deepclone(grid) {
 
 function Mate(col, inCheck) {
 	if (inCheck == col) {
-		if (options.length == 0) {
+		if (Grid.options.length == 0) {
 			return true;
 		}
 	}
@@ -124,7 +124,7 @@ function formatTime(time) {
 }
 
 //bool
-function isBeingAttackedMain(colorName, i, j) {
+function isBeingAttackedMain(colorName, i, j, Grid) {
 	// check for knights attacking
 	const knightTest = [
 		[i + 2, j - 1],
@@ -138,7 +138,7 @@ function isBeingAttackedMain(colorName, i, j) {
 	];
 	for (let index = 0; index < knightTest.length; index++) {
 		const [testI, testJ] = knightTest[index];
-		if (!isOpen(testI, testJ) && grid[testI][testJ].type === "Knight" && hasEnemy(colorName, testI, testJ)) {
+		if (!isOpen(testI, testJ) && Grid[testI][testJ].type === "Knight" && hasEnemy(colorName, testI, testJ)) {
 			return true;
 		}
 	}
@@ -158,40 +158,40 @@ function isBeingAttackedMain(colorName, i, j) {
 
 	for (let index = 0; index < kingTest.length; index++) {
 		const [testI, testJ] = kingTest[index];
-		if (!isOpen(testI, testJ) && grid[testI][testJ].type === "King" && hasEnemy(colorName, testI, testJ)) {
+		if (!isOpen(testI, testJ) && Grid[testI][testJ].type === "King" && hasEnemy(colorName, testI, testJ)) {
 			return true;
 		}
 	}
 
 	// check for bishops / queen
-	if (isAttackedWithIncrement(colorName, i + 1, j + 1, 1, 1, ["Bishop", "Queen"])) return true;
-	if (isAttackedWithIncrement(colorName, i - 1, j - 1, -1, -1, ["Bishop", "Queen"])) return true;
-	if (isAttackedWithIncrement(colorName, i + 1, j - 1, 1, -1, ["Bishop", "Queen"])) return true;
-	if (isAttackedWithIncrement(colorName, i - 1, j + 1, -1, 1, ["Bishop", "Queen"])) return true;
+	if (isAttackedWithIncrement(colorName, i + 1, j + 1, 1, 1, ["Bishop", "Queen"], Grid)) return true;
+	if (isAttackedWithIncrement(colorName, i - 1, j - 1, -1, -1, ["Bishop", "Queen"], Grid)) return true;
+	if (isAttackedWithIncrement(colorName, i + 1, j - 1, 1, -1, ["Bishop", "Queen"], Grid)) return true;
+	if (isAttackedWithIncrement(colorName, i - 1, j + 1, -1, 1, ["Bishop", "Queen"], Grid)) return true;
 
 	//  check for rooks / queen
-	if (isAttackedWithIncrement(colorName, i + 1, j, 1, 0, ["Rook", "Queen"])) return true;
-	if (isAttackedWithIncrement(colorName, i, j + 1, 0, 1, ["Rook", "Queen"])) return true;
-	if (isAttackedWithIncrement(colorName, i - 1, j, -1, 0, ["Rook", "Queen"])) return true;
-	if (isAttackedWithIncrement(colorName, i, j - 1, 0, -1, ["Rook", "Queen"])) return true;
+	if (isAttackedWithIncrement(colorName, i + 1, j, 1, 0, ["Rook", "Queen"], Grid)) return true;
+	if (isAttackedWithIncrement(colorName, i, j + 1, 0, 1, ["Rook", "Queen"], Grid)) return true;
+	if (isAttackedWithIncrement(colorName, i - 1, j, -1, 0, ["Rook", "Queen"], Grid)) return true;
+	if (isAttackedWithIncrement(colorName, i, j - 1, 0, -1, ["Rook", "Queen"], Grid)) return true;
 
 	// check for pawns
 	const direction = colorName === BLACK ? 1 : -1;
 	j += direction;
 
-	if (!isOpen(i - 1, j) && grid[i - 1][j].type === "Pawn" && hasEnemy(colorName, i - 1, j)) {
+	if (!isOpen(i - 1, j, Grid) && grid[i - 1][j].type === "Pawn" && hasEnemy(colorName, i - 1, j, Grid)) {
 		return true;
-	} else if (!isOpen(i + 1, j) && grid[i + 1][j].type === "Pawn" && hasEnemy(colorName, i + 1, j)) {
+	} else if (!isOpen(i + 1, j, Grid) && grid[i + 1][j].type === "Pawn" && hasEnemy(colorName, i + 1, j, Grid)) {
 		return true;
 	}
 
 	return false;
 }
 
-function isAttackedWithIncrement(colorName, i, j, iInc, jInc, types) {
+function isAttackedWithIncrement(colorName, i, j, iInc, jInc, types, Grid) {
 	while (0 <= i && i < columns && 0 <= j && j < rows) {
-		if (!isOpen(i, j)) {
-			if (hasEnemy(colorName, i, j) && types.includes(grid[i][j].type)) {
+		if (!isOpen(i, j, Grid)) {
+			if (hasEnemy(colorName, i, j, Grid) && types.includes(Grid[i][j].type)) {
 				return true;
 			}
 			break;
@@ -202,15 +202,15 @@ function isAttackedWithIncrement(colorName, i, j, iInc, jInc, types) {
 	return false;
 }
 
-function findWithIncrement(colorName, i, j, iInc, jInc) {
+function findWithIncrement(colorName, i, j, iInc, jInc, Grid) {
 	var initI = i,
 		initJ = j;
 	while (0 <= i && i < columns && 0 <= j && j < rows) {
-		if (isOpen(i, j)) {
-			options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
+		if (isOpen(i, j, Grid)) {
+			Grid.options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
 		} else {
 			if (hasEnemy(colorName, i, j)) {
-				options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
+				Grid.options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
 			}
 			break;
 		}
@@ -219,8 +219,8 @@ function findWithIncrement(colorName, i, j, iInc, jInc) {
 	}
 }
 
-function pushOptionIfOpenOrEnemy(colorName, i, j) {
-	if (0 <= i && i < columns && 0 <= j && j < rows && (isOpen(i, j) || hasEnemy(colorName, i, j))) {
-		options.push(new Move(i, j, i, j, moveScore(i, j)));
+function pushOptionIfOpenOrEnemy(colorName, i, j, Grid) {
+	if (0 <= i && i < columns && 0 <= j && j < rows && (isOpen(i, j, Grid) || hasEnemy(colorName, i, j, Grid))) {
+		Grid.options.push(new Move(i, j, i, j, moveScore(i, j)));
 	}
 }

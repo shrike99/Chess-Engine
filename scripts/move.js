@@ -1,18 +1,18 @@
 function findMoves(pressedX, pressedY, Grid = grid) {
 	var startDate = new Date();
 
-	Grid[pressedX][pressedY].findLegalMoves(pressedX, pressedY);
+	Grid[pressedX][pressedY].findLegalMoves(pressedX, pressedY, Grid);
 
 	if (Grid[pressedX][pressedY].type === "King") {
-		options = options.filter((option) => {
-			return !isBeingAttacked(turnColour, option.endX, option.endY, pressedX, pressedY);
+		Grid.options = Grid.options.filter((option) => {
+			return !isBeingAttacked(turnColour, option.endX, option.endY, pressedX, pressedY, Grid);
 		});
 	} else {
 		for (var i = 0; i < Grid.length; i++) {
 			for (var j = 0; j < Grid[i].length; j++) {
 				if (!isOpen(i, j, Grid) && Grid[i][j].type === "King" && Grid[i][j].colorName === turnColour) {
-					options = options.filter((option) => {
-						return !isBeingAttacked(turnColour, i, j, pressedX, pressedY, option.endX, option.endY);
+					Grid.options = Grid.options.filter((option) => {
+						return !isBeingAttacked(turnColour, i, j, pressedX, pressedY, option.endX, option.endY, Grid);
 					});
 					break;
 				}
@@ -38,17 +38,17 @@ function EvaluatePosition(grid, col = computerCol) {
 	return col == WHITE ? whiteScore - blackScore : blackScore - whiteScore;
 }
 
-function EvaluateMove(x1, y1, move, col, _grid) {
+function EvaluateMove(x1, y1, move, col, Grid) {
 	var { endX, endY } = move;
 
-	var piece = _grid[x1][y1];
+	var piece = Grid[x1][y1];
 
-	_grid[endX][endY] = piece;
+	Grid[endX][endY] = piece;
 
-	_grid[x1][y1] = null;
+	Grid[x1][y1] = null;
 
-	var black = getBlack(_grid);
-	var white = getWhite(_grid);
+	var black = getBlack(Grid);
+	var white = getWhite(Grid);
 
 	var blackScore = getScore(black);
 	var whiteScore = getScore(white);
@@ -71,8 +71,8 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching =
 		//const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
 
 		if (Grid[currX][currY].type == "Pawn" && (pressedY == currX + 2 || pressedY == currY - 2)) {
-			canEnPassant = true;
-			enPassantCoords = [pressedX, pressedY];
+			Grid.canEnPassant = true;
+			Grid.enPassantCoords = [pressedX, pressedY];
 		}
 
 		Grid[pressedX][pressedY] = Grid[currX][currY];
@@ -80,15 +80,11 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching =
 
 		if (option.extra == ENPASSANT) {
 			const enpassantRow = Grid[pressedX][pressedY].colorName == WHITE ? 3 : 4;
-			console.log(enPassantCoords[0], pressedX, enPassantCoords[0] == pressedX && enPassantCoords[1] == enpassantRow);
-			if (canEnPassant && enPassantCoords[0] == pressedX && enPassantCoords[1] == enpassantRow) {
+			console.log(Grid.enPassantCoords[0], pressedX, Grid.enPassantCoords[0] == pressedX && Grid.enPassantCoords[1] == enpassantRow);
+			if (Grid.canEnPassant && Grid.enPassantCoords[0] == pressedX && Grid.enPassantCoords[1] == enpassantRow) {
 				console.log(pressedX, enpassantRow, Grid[pressedX][enpassantRow]);
 				Grid[pressedX][enpassantRow] = null;
-				canEnPassant = false;
-			}
-		} else {
-			if (canEnPassant) {
-				canEnPassant = false;
+				Grid.canEnPassant = false;
 			}
 		}
 
@@ -123,11 +119,11 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching =
 		for (var i = 0; i < Grid.length; i++) {
 			for (var j = 0; j < Grid[i].length; j++) {
 				if (!isOpen(i, j, Grid) && Grid[i][j].type === "King" && Grid[i][j].colorName === turnColour) {
-					if (isBeingAttacked(turnColour, i, j)) {
-						grid.inCheck = turnColour;
+					if (isBeingAttacked(turnColour, i, j, Grid)) {
+						Grid.inCheck = turnColour;
 						document.getElementById("check").innerText = `${turnColour} is in check`;
 					} else {
-						grid.inCheck = null;
+						Grid.inCheck = null;
 						document.getElementById("check").innerText = `${turnColour}'s turn`;
 					}
 					break;
@@ -135,7 +131,7 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching =
 			}
 		}
 
-		options = [];
+		Grid.options = [];
 
 		option.piece = pieceinoption;
 	} catch {

@@ -5,34 +5,34 @@ const CASTLE = "CASTLE";
 
 const ENPASSANT = "ENPASSANT";
 
-function hasEnemy(myColor, i, j) {
+function hasEnemy(myColor, i, j, Grid) {
 	const enemyColor = myColor === BLACK ? WHITE : BLACK;
-	return grid[i][j] instanceof Piece && grid[i][j].colorName === enemyColor;
+	return Grid[i][j] instanceof Piece && Grid[i][j].colorName === enemyColor;
 }
 
-function isBeingAttacked(colorName, i, j, ignoreI, ignoreJ, fillI, fillJ) {
+function isBeingAttacked(colorName, i, j, ignoreI, ignoreJ, fillI, fillJ, Grid) {
 	if (ignoreI === undefined || ignoreJ === undefined) {
-		return isBeingAttackedMain(colorName, i, j);
+		return isBeingAttackedMain(colorName, i, j, Grid);
 	}
 
-	const ignoredPiece = grid[ignoreI][ignoreJ];
-	grid[ignoreI][ignoreJ] = undefined;
-	let filledPiece = fillI !== undefined && fillJ !== undefined ? grid[fillI][fillJ] : undefined;
+	const ignoredPiece = Grid[ignoreI][ignoreJ];
+	Grid[ignoreI][ignoreJ] = undefined;
+	let filledPiece = fillI !== undefined && fillJ !== undefined ? Grid[fillI][fillJ] : undefined;
 
 	if (!isNaN(fillI) && !isNaN(fillJ)) {
-		grid[fillI][fillJ] = new Filler(colorName);
+		Grid[fillI][fillJ] = new Filler(colorName);
 	}
 
-	if (isBeingAttackedMain(colorName, i, j)) {
-		grid[ignoreI][ignoreJ] = ignoredPiece;
+	if (isBeingAttackedMain(colorName, i, j, Grid)) {
+		Grid[ignoreI][ignoreJ] = ignoredPiece;
 		if (!isNaN(fillI) && !isNaN(fillJ)) {
-			grid[fillI][fillJ] = filledPiece;
+			Grid[fillI][fillJ] = filledPiece;
 		}
 		return true;
 	} else {
-		grid[ignoreI][ignoreJ] = ignoredPiece;
+		Grid[ignoreI][ignoreJ] = ignoredPiece;
 		if (!isNaN(fillI) && !isNaN(fillJ)) {
-			grid[fillI][fillJ] = filledPiece;
+			Grid[fillI][fillJ] = filledPiece;
 		}
 		return false;
 	}
@@ -95,41 +95,41 @@ class Pawn extends Piece {
 	constructor(color) {
 		super("Pawn", color);
 	}
-	findLegalMoves(i, j) {
+	findLegalMoves(i, j, Grid = grid) {
 		current = [i, j];
-		options = [];
+		Grid.options = [];
 		const direction = this.colorName == WHITE ? -1 : 1;
 		const enpassantrow = this.colorName == WHITE ? 3 : 4;
 		let nextRow = j + direction;
 
-		if (!isOpen(i + 1, j) && hasEnemy(this.colorName, i + 1, j) && j == enpassantrow) {
-			if (canEnPassant && enPassantCoords[0] == i + 1 && enPassantCoords[1] == j) {
-				options.push(new Move(i, j, i + 1, nextRow, moveScore(i + 1, nextRow), ENPASSANT));
+		if (!isOpen(i + 1, j, Grid) && hasEnemy(this.colorName, i + 1, j, Grid) && j == enpassantrow) {
+			if (Grid.canEnPassant && Grid.enPassantCoords[0] == i + 1 && Grid.enPassantCoords[1] == j) {
+				Grid.options.push(new Move(i, j, i + 1, nextRow, moveScore(i + 1, nextRow), ENPASSANT));
 			}
 		}
 
-		if (!isOpen(i - 1, j) && hasEnemy(this.colorName, i - 1, j) && j == enpassantrow) {
-			if (canEnPassant && enPassantCoords[0] == i - 1 && enPassantCoords[1] == j) {
-				options.push(new Move(i, j, i - 1, nextRow, moveScore(i - 1, nextRow), ENPASSANT));
+		if (!isOpen(i - 1, j, Grid) && hasEnemy(this.colorName, i - 1, j, Grid) && j == enpassantrow) {
+			if (Grid.canEnPassant && Grid.enPassantCoords[0] == i - 1 && Grid.enPassantCoords[1] == j) {
+				Grid.options.push(new Move(i, j, i - 1, nextRow, moveScore(i - 1, nextRow), ENPASSANT));
 			}
 		}
 
-		if (0 <= nextRow && nextRow < rows && isOpen(i, nextRow)) {
-			options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
+		if (0 <= nextRow && nextRow < rows && isOpen(i, nextRow, Grid)) {
+			Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
 			nextRow += direction;
-			if (0 <= nextRow && nextRow < rows && isOpen(i, nextRow) && !this.moved) {
-				options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
+			if (0 <= nextRow && nextRow < rows && isOpen(i, nextRow, Grid) && !this.moved) {
+				Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
 			}
 		}
 		nextRow = j + direction;
 
 		i--;
-		if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow) && !isOpen(i, nextRow)) {
-			options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
+		if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow, Grid) && !isOpen(i, nextRow, Grid)) {
+			Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
 		}
 		i += 2;
-		if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow) && !isOpen(i, nextRow)) {
-			options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
+		if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow, Grid) && !isOpen(i, nextRow, Grid)) {
+			Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
 		}
 	}
 }
@@ -139,14 +139,14 @@ class Rook extends Piece {
 		super("Rook", color);
 	}
 
-	findLegalMoves(i, j) {
-		options = [];
+	findLegalMoves(i, j, Grid) {
+		Grid.options = [];
 		current = [i, j];
 
-		findWithIncrement(this.colorName, i + 1, j, 1, 0);
-		findWithIncrement(this.colorName, i, j + 1, 0, 1);
-		findWithIncrement(this.colorName, i - 1, j, -1, 0);
-		findWithIncrement(this.colorName, i, j - 1, 0, -1);
+		findWithIncrement(this.colorName, i + 1, j, 1, 0, Grid);
+		findWithIncrement(this.colorName, i, j + 1, 0, 1, Grid);
+		findWithIncrement(this.colorName, i - 1, j, -1, 0, Grid);
+		findWithIncrement(this.colorName, i, j - 1, 0, -1, Grid);
 	}
 }
 
@@ -155,8 +155,8 @@ class Knight extends Piece {
 		super("Knight", color);
 	}
 
-	findLegalMoves(i, j) {
-		options = [];
+	findLegalMoves(i, j, Grid) {
+		Grid.options = [];
 		current = [i, j];
 
 		const toTest = [
@@ -172,7 +172,7 @@ class Knight extends Piece {
 
 		for (let index = 0; index < toTest.length; index++) {
 			const [testI, testJ] = toTest[index];
-			pushOptionIfOpenOrEnemy(this.colorName, testI, testJ);
+			pushOptionIfOpenOrEnemy(this.colorName, testI, testJ, Grid);
 		}
 	}
 }
@@ -182,14 +182,14 @@ class Bishop extends Piece {
 		super("Bishop", color);
 	}
 
-	findLegalMoves(i, j) {
-		options = [];
+	findLegalMoves(i, j, Grid) {
+		Grid.options = [];
 		current = [i, j];
 
-		findWithIncrement(this.colorName, i + 1, j + 1, 1, 1);
-		findWithIncrement(this.colorName, i - 1, j - 1, -1, -1);
-		findWithIncrement(this.colorName, i + 1, j - 1, 1, -1);
-		findWithIncrement(this.colorName, i - 1, j + 1, -1, 1);
+		findWithIncrement(this.colorName, i + 1, j + 1, 1, 1, Grid);
+		findWithIncrement(this.colorName, i - 1, j - 1, -1, -1, Grid);
+		findWithIncrement(this.colorName, i + 1, j - 1, 1, -1, Grid);
+		findWithIncrement(this.colorName, i - 1, j + 1, -1, 1, Grid);
 	}
 }
 
@@ -198,9 +198,9 @@ class King extends Piece {
 		super("King", color);
 	}
 
-	findLegalMoves(i, j) {
+	findLegalMoves(i, j, Grid) {
 		current = [i, j];
-		options = [];
+		Grid.options = [];
 
 		const toTest = [
 			[i + 1, j],
@@ -216,38 +216,38 @@ class King extends Piece {
 
 		for (let index = 0; index < toTest.length; index++) {
 			const [iTest, jTest] = toTest[index];
-			pushOptionIfOpenOrEnemy(this.colorName, iTest, jTest);
+			pushOptionIfOpenOrEnemy(this.colorName, iTest, jTest, Grid);
 		}
 
 		// castling
 
-		if (!this.moved && grid.inCheck !== turnColour) {
+		if (!this.moved && Grid.inCheck !== turnColour) {
 			let testI = i + 1;
 			while (testI < columns) {
-				if (!isOpen(testI, j)) {
+				if (!isOpen(testI, j, Grid)) {
 					break;
 				}
 				testI++;
 			}
 
-			if (grid[testI][j].type === "Rook" && !grid[testI][j].moved) {
-				if (!isBeingAttacked(this.colorName, i + 1, j) && !isBeingAttacked(this.colorName, i + 2, j)) {
+			if (Grid[testI][j].type === "Rook" && !Grid[testI][j].moved) {
+				if (!isBeingAttacked(this.colorName, i + 1, j, Grid) && !isBeingAttacked(this.colorName, i + 2, j, Grid)) {
 					console.log("rook found");
-					options.push(new Move(i, j, i + 2, j, moveScore(i + 2, j), CASTLE));
+					Grid.options.push(new Move(i, j, i + 2, j, moveScore(i + 2, j), CASTLE));
 				}
 			}
 
 			testI = i - 1;
 			while (0 < testI) {
-				if (!isOpen(testI, j)) {
+				if (!isOpen(testI, j, Grid)) {
 					break;
 				}
 				testI--;
 			}
 
-			if (grid[testI][j].type === "Rook" && !grid[testI][j].moved) {
-				if (!isBeingAttacked(this.colorName, i - 1, j) && !isBeingAttacked(this.colorName, i - 2, j)) {
-					options.push(new Move(i, j, i - 2, j, moveScore(i - 2, j), CASTLE));
+			if (Grid[testI][j].type === "Rook" && !Grid[testI][j].moved) {
+				if (!isBeingAttacked(this.colorName, i - 1, j, Grid) && !isBeingAttacked(this.colorName, i - 2, j, Grid)) {
+					Grid.options.push(new Move(i, j, i - 2, j, moveScore(i - 2, j), CASTLE));
 				}
 			}
 		}
@@ -259,18 +259,18 @@ class Queen extends Piece {
 		super("Queen", color);
 	}
 
-	findLegalMoves(i, j) {
-		options = [];
+	findLegalMoves(i, j, Grid) {
+		Grid.options = [];
 		current = [i, j];
 
-		findWithIncrement(this.colorName, i + 1, j + 1, 1, 1);
-		findWithIncrement(this.colorName, i - 1, j - 1, -1, -1);
-		findWithIncrement(this.colorName, i + 1, j - 1, 1, -1);
-		findWithIncrement(this.colorName, i - 1, j + 1, -1, 1);
-		findWithIncrement(this.colorName, i + 1, j, 1, 0);
-		findWithIncrement(this.colorName, i, j + 1, 0, 1);
-		findWithIncrement(this.colorName, i - 1, j, -1, 0);
-		findWithIncrement(this.colorName, i, j - 1, 0, -1);
+		findWithIncrement(this.colorName, i + 1, j + 1, 1, 1, Grid);
+		findWithIncrement(this.colorName, i - 1, j - 1, -1, -1, Grid);
+		findWithIncrement(this.colorName, i + 1, j - 1, 1, -1, Grid);
+		findWithIncrement(this.colorName, i - 1, j + 1, -1, 1, Grid);
+		findWithIncrement(this.colorName, i + 1, j, 1, 0, Grid);
+		findWithIncrement(this.colorName, i, j + 1, 0, 1, Grid);
+		findWithIncrement(this.colorName, i - 1, j, -1, 0, Grid);
+		findWithIncrement(this.colorName, i, j - 1, 0, -1, Grid);
 	}
 }
 

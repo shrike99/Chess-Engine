@@ -22,7 +22,7 @@ const h = HEIGHT / rows;
 
 var grid = new Array(columns);
 
-var options = [];
+grid.options = [];
 var current = [];
 
 // team in check
@@ -33,9 +33,9 @@ var turnColour = WHITE;
 
 var stopGame = false;
 
-var canEnPassant = false;
+grid.canEnPassant = false;
 
-var enPassantCoords;
+grid.enPassantCoords;
 
 var computerCol = BLACK;
 
@@ -125,9 +125,9 @@ function draw() {
 			}
 		}
 	}
-	for (var i = 0; i < options.length; i++) {
+	for (var i = 0; i < grid.options.length; i++) {
 		fill("#FD6868");
-		circle(options[i].endX * w + w / 2, options[i].endY * h + h / 2, w - 60);
+		circle(grid.options[i].endX * w + w / 2, grid.options[i].endY * h + h / 2, w - 60);
 	}
 
 	if (turnColour == computerCol && !stopGame) {
@@ -142,7 +142,7 @@ function mouseClicked() {
 
 		if (pressedX == current[0] && pressedY == current[1]) {
 			// undo select options
-			options = [];
+			grid.options = [];
 			current = [];
 			return;
 		}
@@ -155,8 +155,8 @@ function mouseClicked() {
 
 		//MOVES HAVE ALREADY BEEN FOUND
 
-		if (options.some((x) => x.endX === pressedX && x.endY === pressedY)) {
-			const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
+		if (grid.options.some((x) => x.endX === pressedX && x.endY === pressedY)) {
+			const option = grid.options.find((x) => x.endX === pressedX && x.endY === pressedY);
 			MovePiece(current[0], current[1], pressedX, pressedY, grid, option);
 		}
 	}
@@ -165,9 +165,9 @@ function mouseClicked() {
 // const delay = ms => new Promise(res => setTimeout(res, ms))
 
 async function computerTurn() {
-	//randomMove();
+	randomMove();
 
-	Search(2, BLACK);
+	//Search(3, BLACK);
 	turnColour = WHITE;
 }
 
@@ -203,12 +203,12 @@ function randomMove() {
 		var y = blackPieces[i][1];
 
 		current = [x, y];
-		findMoves(x, y);
+		findMoves(x, y, grid);
 
-		if (options.length != 0) {
+		if (grid.options.length != 0) {
 			pieceMovesList.push([current, options]);
 		}
-		options = [];
+		grid.options = [];
 	}
 
 	console.log("MOVELIST:", pieceMovesList);
@@ -250,11 +250,11 @@ function randomMove() {
 		selectedMove = moveInfo[1][best[1]];
 	}
 
-	options.push(selectedMove);
+	grid.options.push(selectedMove);
 
 	var { endX, endY } = selectedMove;
 
-	const option = options.find((x) => x.endX === endX && x.endY === endY);
+	const option = grid.options.find((x) => x.endX === endX && x.endY === endY);
 
 	MovePiece(selectedPiece[0], selectedPiece[1], endX, endY, grid, option);
 }
