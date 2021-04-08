@@ -57,84 +57,81 @@ function EvaluateMove(x1, y1, move, col, Grid) {
 }
 
 function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching = false) {
-	try {
-		var pieceinoption = Grid[pressedX][pressedY];
+	var pieceinoption = Grid[pressedX][pressedY];
 
-		var end = Grid[currX][currY].colorName == WHITE ? 0 : rows - 1;
+	var end = Grid[currX][currY].colorName == WHITE ? 0 : rows - 1;
 
-		if (pressedY == end && Grid[currX][currY].type == "Pawn") {
-			Grid[currX][currY] = new Queen(Grid[currX][currY].colorName);
-		}
-
-		Grid[currX][currY].moved = true;
-
-		//const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
-
-		if (Grid[currX][currY].type == "Pawn" && (pressedY == currX + 2 || pressedY == currY - 2)) {
-			Grid.canEnPassant = true;
-			Grid.enPassantCoords = [pressedX, pressedY];
-		}
-
-		Grid[pressedX][pressedY] = Grid[currX][currY];
-		Grid[currX][currY] = null;
-
-		if (option.extra == ENPASSANT) {
-			const enpassantRow = Grid[pressedX][pressedY].colorName == WHITE ? 3 : 4;
-			console.log(Grid.enPassantCoords[0], pressedX, Grid.enPassantCoords[0] == pressedX && Grid.enPassantCoords[1] == enpassantRow);
-			if (Grid.canEnPassant && Grid.enPassantCoords[0] == pressedX && Grid.enPassantCoords[1] == enpassantRow) {
-				console.log(pressedX, enpassantRow, Grid[pressedX][enpassantRow]);
-				Grid[pressedX][enpassantRow] = null;
-				Grid.canEnPassant = false;
-			}
-		}
-
-		if (option.extra === CASTLE) {
-			// move rook in castling
-			if (currX < pressedX) {
-				Grid[pressedX - 1][pressedY] = Grid[columns - 1][pressedY];
-				Grid[columns - 1][pressedY] = null;
-			} else {
-				Grid[pressedX + 1][pressedY] = Grid[0][pressedY];
-				Grid[0][pressedY] = null;
-			}
-		}
-
-		if (!issearching) {
-			if (turnColour == BLACK) {
-				whiteTimerStart();
-			} else {
-				blackTimerStart();
-			}
-			turnColour = turnColour === WHITE ? BLACK : WHITE;
-			if (turnColour == WHITE) {
-				timeWhite += increment;
-				timerWhite.innerText = formatTime(timeWhite);
-			} else {
-				timeBlack += increment;
-				timerBlack.innerText = formatTime(timeBlack);
-			}
-		}
-
-		// check if enemy king is in check
-		for (var i = 0; i < Grid.length; i++) {
-			for (var j = 0; j < Grid[i].length; j++) {
-				if (!isOpen(i, j, Grid) && Grid[i][j].type === "King" && Grid[i][j].colorName === turnColour) {
-					if (isBeingAttacked(turnColour, i, j, Grid)) {
-						Grid.inCheck = turnColour;
-						document.getElementById("check").innerText = `${turnColour} is in check`;
-					} else {
-						Grid.inCheck = null;
-						document.getElementById("check").innerText = `${turnColour}'s turn`;
-					}
-					break;
-				}
-			}
-		}
-
-		Grid.options = [];
-
-		option.piece = pieceinoption;
-	} catch {
-		console.log(Grid, option);
+	if (pressedY == end && Grid[currX][currY].type == "Pawn") {
+		Grid[currX][currY] = new Queen(Grid[currX][currY].colorName);
 	}
+
+	Grid[currX][currY].moved = true;
+
+	//const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
+
+	if (Grid[currX][currY].type == "Pawn" && (pressedY == currX + 2 || pressedY == currY - 2)) {
+		Grid.canEnPassant = true;
+		Grid.enPassantCoords = [pressedX, pressedY];
+	}
+
+	Grid[pressedX][pressedY] = Grid[currX][currY];
+	Grid[currX][currY] = null;
+
+	if (option.extra == ENPASSANT) {
+		console.log("ENPASSANT:", option);
+		const enpassantRow = Grid[pressedX][pressedY].colorName == WHITE ? 3 : 4;
+		console.log(Grid.enPassantCoords[0], pressedX, Grid.enPassantCoords[0] == pressedX && Grid.enPassantCoords[1] == enpassantRow);
+		if (Grid.canEnPassant && Grid.enPassantCoords[0] == pressedX && Grid.enPassantCoords[1] == enpassantRow) {
+			console.log(pressedX, enpassantRow, Grid[pressedX][enpassantRow]);
+			Grid[pressedX][enpassantRow] = null;
+			Grid.canEnPassant = false;
+		}
+	}
+
+	if (option.extra === CASTLE) {
+		// move rook in castling
+		if (currX < pressedX) {
+			Grid[pressedX - 1][pressedY] = Grid[columns - 1][pressedY];
+			Grid[columns - 1][pressedY] = null;
+		} else {
+			Grid[pressedX + 1][pressedY] = Grid[0][pressedY];
+			Grid[0][pressedY] = null;
+		}
+	}
+
+	if (!issearching) {
+		if (turnColour == BLACK) {
+			whiteTimerStart();
+		} else {
+			blackTimerStart();
+		}
+		turnColour = turnColour === WHITE ? BLACK : WHITE;
+		if (turnColour == WHITE) {
+			timeWhite += increment;
+			timerWhite.innerText = formatTime(timeWhite);
+		} else {
+			timeBlack += increment;
+			timerBlack.innerText = formatTime(timeBlack);
+		}
+	}
+
+	// check if enemy king is in check
+	for (var i = 0; i < Grid.length; i++) {
+		for (var j = 0; j < Grid[i].length; j++) {
+			if (!isOpen(i, j, Grid) && Grid[i][j].type === "King" && Grid[i][j].colorName === turnColour) {
+				if (isBeingAttacked(turnColour, i, j, ...Array(4), Grid)) {
+					Grid.inCheck = turnColour;
+					document.getElementById("check").innerText = `${turnColour} is in check`;
+				} else {
+					Grid.inCheck = null;
+					document.getElementById("check").innerText = `${turnColour}'s turn`;
+				}
+				break;
+			}
+		}
+	}
+
+	Grid.options = [];
+
+	option.piece = pieceinoption;
 }

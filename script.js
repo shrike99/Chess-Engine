@@ -83,18 +83,18 @@ function load() {
 }
 
 function setup() {
-	black_king_img = loadImage("images/black_king.png");
-	white_king_img = loadImage("images/white_king.png");
-	black_pawn = loadImage("images/black_pawn.png");
-	white_pawn = loadImage("images/white_pawn.png");
-	black_queen = loadImage("images/black_queen.png");
-	white_queen = loadImage("images/white_queen.png");
-	black_rook = loadImage("images/black_rook.png");
-	white_rook = loadImage("images/white_rook.png");
-	black_knight = loadImage("images/black_knight.png");
-	white_knight = loadImage("images/white_knight.png");
-	black_bishop = loadImage("images/black_bishop.png");
-	white_bishop = loadImage("images/white_bishop.png");
+	black_king_img = loadImage("images/black_king.svg");
+	white_king_img = loadImage("images/white_king.svg");
+	black_pawn = loadImage("images/black_pawn.svg");
+	white_pawn = loadImage("images/white_pawn.svg");
+	black_queen = loadImage("images/black_queen.svg");
+	white_queen = loadImage("images/white_queen.svg");
+	black_rook = loadImage("images/black_rook.svg");
+	white_rook = loadImage("images/white_rook.svg");
+	black_knight = loadImage("images/black_knight.svg");
+	white_knight = loadImage("images/white_knight.svg");
+	black_bishop = loadImage("images/black_bishop.svg");
+	white_bishop = loadImage("images/white_bishop.svg");
 	initGrid(grid);
 	var cnv = createCanvas(WIDTH, HEIGHT);
 	timerInc.innerText = "+" + increment;
@@ -206,7 +206,7 @@ function randomMove() {
 		findMoves(x, y, grid);
 
 		if (grid.options.length != 0) {
-			pieceMovesList.push([current, options]);
+			pieceMovesList.push([current, grid.options]);
 		}
 		grid.options = [];
 	}

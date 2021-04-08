@@ -48,44 +48,50 @@ class Piece {
 
 	draw(i, j) {
 		if (this.type == "King") {
-			image(black_king_img, i * w, j * h);
 			if (this.colorName == "WHITE") {
 				image(white_king_img, i * w, j * h);
+			} else {
+				image(black_king_img, i * w, j * h);
 			}
 		}
 
 		if (this.type == "Pawn") {
-			image(black_pawn, i * w, j * h);
 			if (this.colorName == "WHITE") {
 				image(white_pawn, i * w, j * h);
+			} else {
+				image(black_pawn, i * w, j * h);
 			}
 		}
 
 		if (this.type == "Queen") {
-			image(black_queen, i * w, j * h);
 			if (this.colorName == "WHITE") {
 				image(white_queen, i * w, j * h);
+			} else {
+				image(black_queen, i * w, j * h);
 			}
 		}
 
 		if (this.type == "Rook") {
-			image(black_rook, i * w, j * h);
 			if (this.colorName == "WHITE") {
 				image(white_rook, i * w, j * h);
+			} else {
+				image(black_rook, i * w, j * h);
 			}
 		}
 
 		if (this.type == "Knight") {
-			image(black_knight, i * w, j * h);
 			if (this.colorName == "WHITE") {
 				image(white_knight, i * w, j * h);
+			} else {
+				image(black_knight, i * w, j * h);
 			}
 		}
 
 		if (this.type == "Bishop") {
-			image(black_bishop, i * w, j * h);
 			if (this.colorName == "WHITE") {
 				image(white_bishop, i * w, j * h);
+			} else {
+				image(black_bishop, i * w, j * h);
 			}
 		}
 	}
@@ -103,7 +109,7 @@ class Pawn extends Piece {
 		let nextRow = j + direction;
 
 		if (!isOpen(i + 1, j, Grid) && hasEnemy(this.colorName, i + 1, j, Grid) && j == enpassantrow) {
-			if (Grid.canEnPassant && Grid.enPassantCoords[0] == i + 1 && Grid.enPassantCoords[1] == j) {
+			if (Grid.canEnPassant) {
 				Grid.options.push(new Move(i, j, i + 1, nextRow, moveScore(i + 1, nextRow), ENPASSANT));
 			}
 		}
@@ -231,7 +237,7 @@ class King extends Piece {
 			}
 
 			if (Grid[testI][j].type === "Rook" && !Grid[testI][j].moved) {
-				if (!isBeingAttacked(this.colorName, i + 1, j, Grid) && !isBeingAttacked(this.colorName, i + 2, j, Grid)) {
+				if (!isBeingAttacked(this.colorName, i + 1, j, ...Array(4), Grid) && !isBeingAttacked(this.colorName, i + 2, j, ...Array(4), Grid)) {
 					console.log("rook found");
 					Grid.options.push(new Move(i, j, i + 2, j, moveScore(i + 2, j), CASTLE));
 				}
@@ -246,7 +252,7 @@ class King extends Piece {
 			}
 
 			if (Grid[testI][j].type === "Rook" && !Grid[testI][j].moved) {
-				if (!isBeingAttacked(this.colorName, i - 1, j, Grid) && !isBeingAttacked(this.colorName, i - 2, j, Grid)) {
+				if (!isBeingAttacked(this.colorName, i - 1, j, ...Array(4), Grid) && !isBeingAttacked(this.colorName, i - 2, j, ...Array(4), Grid)) {
 					Grid.options.push(new Move(i, j, i - 2, j, moveScore(i - 2, j), CASTLE));
 				}
 			}
