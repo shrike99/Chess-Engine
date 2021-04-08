@@ -65,6 +65,7 @@ function SearchWithin(x, y, move, col, depth, Grid, rootmove = [x, y, move]) {
 				highest = eval;
 				bestMove = rootmove;
 			}
+			return eval;
 		});
 	});
 }

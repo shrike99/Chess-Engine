@@ -69,23 +69,19 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching =
 
 	//const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
 
-	if (Grid[currX][currY].type == "Pawn" && (pressedY == currX + 2 || pressedY == currY - 2)) {
-		Grid.canEnPassant = true;
-		Grid.enPassantCoords = [pressedX, pressedY];
-	}
-
 	Grid[pressedX][pressedY] = Grid[currX][currY];
 	Grid[currX][currY] = null;
 
-	if (option.extra == ENPASSANT) {
-		console.log("ENPASSANT:", option);
-		const enpassantRow = Grid[pressedX][pressedY].colorName == WHITE ? 3 : 4;
-		console.log(Grid.enPassantCoords[0], pressedX, Grid.enPassantCoords[0] == pressedX && Grid.enPassantCoords[1] == enpassantRow);
-		if (Grid.canEnPassant && Grid.enPassantCoords[0] == pressedX && Grid.enPassantCoords[1] == enpassantRow) {
-			console.log(pressedX, enpassantRow, Grid[pressedX][enpassantRow]);
-			Grid[pressedX][enpassantRow] = null;
-			Grid.canEnPassant = false;
-		}
+	const enpassantRow = Grid[pressedX][pressedY].colorName == WHITE ? 3 : 4;
+
+	if (option.extra == DOUBLE) {
+		Grid[pressedX][pressedY].turn = turn;
+	}
+
+	if (option.extra == ENPASSANT && Grid[pressedX][enpassantRow].turn == turn - 1) {
+		var direction = Grid[pressedX][pressedY].colorName == WHITE ? 1 : -1;
+
+		Grid[pressedX][enpassantRow] = null;
 	}
 
 	if (option.extra === CASTLE) {
@@ -132,6 +128,10 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching =
 	}
 
 	Grid.options = [];
+
+	if (Grid == grid) {
+		turn++;
+	}
 
 	option.piece = pieceinoption;
 }

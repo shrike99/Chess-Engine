@@ -2,8 +2,8 @@ const BLACK = "BLACK";
 const WHITE = "WHITE";
 
 const CASTLE = "CASTLE";
-
 const ENPASSANT = "ENPASSANT";
+const DOUBLE = "DOUBLE";
 
 function hasEnemy(myColor, i, j, Grid) {
 	const enemyColor = myColor === BLACK ? WHITE : BLACK;
@@ -44,6 +44,7 @@ class Piece {
 		this.color = color === BLACK ? 0 : 255;
 		this.colorName = color;
 		this.moved = false;
+		this.turn = -1;
 	}
 
 	draw(i, j) {
@@ -109,13 +110,13 @@ class Pawn extends Piece {
 		let nextRow = j + direction;
 
 		if (!isOpen(i + 1, j, Grid) && hasEnemy(this.colorName, i + 1, j, Grid) && j == enpassantrow) {
-			if (Grid.canEnPassant) {
+			if (Grid[i + 1][nextRow + direction * -1].turn == turn - 1 || Grid[i + 1][nextRow + direction * -1].turn == -1) {
 				Grid.options.push(new Move(i, j, i + 1, nextRow, moveScore(i + 1, nextRow), ENPASSANT));
 			}
 		}
 
 		if (!isOpen(i - 1, j, Grid) && hasEnemy(this.colorName, i - 1, j, Grid) && j == enpassantrow) {
-			if (Grid.canEnPassant && Grid.enPassantCoords[0] == i - 1 && Grid.enPassantCoords[1] == j) {
+			if (Grid[i - 1][nextRow + direction * -1].turn == turn - 1 || Grid[i - 1][nextRow + direction * -1].turn == -1) {
 				Grid.options.push(new Move(i, j, i - 1, nextRow, moveScore(i - 1, nextRow), ENPASSANT));
 			}
 		}
@@ -124,7 +125,7 @@ class Pawn extends Piece {
 			Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
 			nextRow += direction;
 			if (0 <= nextRow && nextRow < rows && isOpen(i, nextRow, Grid) && !this.moved) {
-				Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
+				Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow), DOUBLE));
 			}
 		}
 		nextRow = j + direction;

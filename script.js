@@ -14,6 +14,8 @@ var black_bishop;
 const columns = 8;
 const rows = 8;
 
+var turn = 0;
+
 const WIDTH = 640;
 const HEIGHT = 640;
 
@@ -32,10 +34,6 @@ grid.inCheck = null;
 var turnColour = WHITE;
 
 var stopGame = false;
-
-grid.canEnPassant = false;
-
-grid.enPassantCoords;
 
 var computerCol = BLACK;
 
@@ -130,13 +128,14 @@ function draw() {
 		circle(grid.options[i].endX * w + w / 2, grid.options[i].endY * h + h / 2, w - 60);
 	}
 
-	if (turnColour == computerCol && !stopGame) {
-		computerTurn();
-	}
+	// if (turnColour == computerCol && !stopGame) {
+	// 	computerTurn();
+	// }
 }
 
 function mouseClicked() {
-	if (!stopGame && turnColour == WHITE && 0 <= mouseX && mouseX <= WIDTH && 0 <= mouseY && mouseY <= HEIGHT) {
+	// && turnColour == WHITE
+	if (!stopGame && 0 <= mouseX && mouseX <= WIDTH && 0 <= mouseY && mouseY <= HEIGHT) {
 		var pressedX = parseInt((mouseX - (mouseX % w)) / w);
 		var pressedY = parseInt((mouseY - (mouseY % h)) / h);
 
@@ -167,7 +166,7 @@ function mouseClicked() {
 async function computerTurn() {
 	randomMove();
 
-	//Search(3, BLACK);
+	Search(3, BLACK);
 	turnColour = WHITE;
 }
 
