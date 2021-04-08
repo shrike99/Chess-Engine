@@ -211,11 +211,11 @@ function randomMove() {
 		grid.options = [];
 	}
 
-	console.log("MOVELIST:", pieceMovesList);
+	//console.log("MOVELIST:", pieceMovesList);
 
 	if (pieceMovesList.length == 0) {
 		//MATE
-		if (Mate(computerCol, grid.inCheck)) {
+		if (Mate(computerCol, grid.inCheck, grid)) {
 			document.getElementById("check").innerText = `THE COMPUTER was mated ):`;
 			stopGame = true;
 			return -200;

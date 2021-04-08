@@ -10,27 +10,27 @@ function hasEnemy(myColor, i, j, Grid) {
 	return Grid[i][j] instanceof Piece && Grid[i][j].colorName === enemyColor;
 }
 
-function isBeingAttacked(colorName, i, j, ignoreI, ignoreJ, fillI, fillJ, Grid) {
-	if (ignoreI === undefined || ignoreJ === undefined) {
-		return isBeingAttackedMain(colorName, i, j, Grid);
+function isBeingAttacked(colorName, endI, endJ, i, j, fillI, fillJ, Grid) {
+	if (i === undefined || j === undefined) {
+		return isBeingAttackedMain(colorName, endI, endJ, Grid);
 	}
 
-	const ignoredPiece = Grid[ignoreI][ignoreJ];
-	Grid[ignoreI][ignoreJ] = undefined;
+	const ignoredPiece = Grid[i][j];
+	Grid[i][j] = undefined;
 	let filledPiece = fillI !== undefined && fillJ !== undefined ? Grid[fillI][fillJ] : undefined;
 
 	if (!isNaN(fillI) && !isNaN(fillJ)) {
 		Grid[fillI][fillJ] = new Filler(colorName);
 	}
 
-	if (isBeingAttackedMain(colorName, i, j, Grid)) {
-		Grid[ignoreI][ignoreJ] = ignoredPiece;
+	if (isBeingAttackedMain(colorName, endI, endJ, Grid)) {
+		Grid[i][j] = ignoredPiece;
 		if (!isNaN(fillI) && !isNaN(fillJ)) {
 			Grid[fillI][fillJ] = filledPiece;
 		}
 		return true;
 	} else {
-		Grid[ignoreI][ignoreJ] = ignoredPiece;
+		Grid[i][j] = ignoredPiece;
 		if (!isNaN(fillI) && !isNaN(fillJ)) {
 			Grid[fillI][fillJ] = filledPiece;
 		}
@@ -178,7 +178,7 @@ class Knight extends Piece {
 
 		for (let index = 0; index < toTest.length; index++) {
 			const [testI, testJ] = toTest[index];
-			pushOptionIfOpenOrEnemy(this.colorName, testI, testJ, Grid);
+			pushOptionIfOpenOrEnemy(this.colorName, i, j, testI, testJ, Grid);
 		}
 	}
 }
@@ -222,7 +222,7 @@ class King extends Piece {
 
 		for (let index = 0; index < toTest.length; index++) {
 			const [iTest, jTest] = toTest[index];
-			pushOptionIfOpenOrEnemy(this.colorName, iTest, jTest, Grid);
+			pushOptionIfOpenOrEnemy(this.colorName, i, j, iTest, jTest, Grid);
 		}
 
 		// castling

@@ -82,7 +82,7 @@ function Search(depth, col) {
 
 	if (pieceMovesList.length == 0) {
 		//MATE
-		if (Mate(col, grid.inCheck)) {
+		if (Mate(col, grid.inCheck, grid)) {
 			document.getElementById("check").innerText = `THE COMPUTER was mated ):`;
 			stopGame = true;
 			return -200;

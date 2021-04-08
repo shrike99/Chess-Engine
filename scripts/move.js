@@ -5,7 +5,7 @@ function findMoves(pressedX, pressedY, Grid = grid) {
 
 	if (Grid[pressedX][pressedY].type === "King") {
 		Grid.options = Grid.options.filter((option) => {
-			return !isBeingAttacked(turnColour, option.endX, option.endY, pressedX, pressedY, Grid);
+			return !isBeingAttacked(turnColour, option.endX, option.endY, pressedX, pressedY, ...Array(2), deepclone(Grid));
 		});
 	} else {
 		for (var i = 0; i < Grid.length; i++) {

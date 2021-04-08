@@ -89,7 +89,7 @@ function deepclone(grid) {
 	return clone;
 }
 
-function Mate(col, inCheck) {
+function Mate(col, inCheck, Grid) {
 	if (inCheck == col) {
 		if (Grid.options.length == 0) {
 			return true;
@@ -138,7 +138,7 @@ function isBeingAttackedMain(colorName, i, j, Grid) {
 	];
 	for (let index = 0; index < knightTest.length; index++) {
 		const [testI, testJ] = knightTest[index];
-		if (!isOpen(testI, testJ) && Grid[testI][testJ].type === "Knight" && hasEnemy(colorName, testI, testJ, Grid)) {
+		if (!isOpen(testI, testJ, Grid) && Grid[testI][testJ].type === "Knight" && hasEnemy(colorName, testI, testJ, Grid)) {
 			return true;
 		}
 	}
@@ -158,7 +158,7 @@ function isBeingAttackedMain(colorName, i, j, Grid) {
 
 	for (let index = 0; index < kingTest.length; index++) {
 		const [testI, testJ] = kingTest[index];
-		if (!isOpen(testI, testJ) && Grid[testI][testJ].type === "King" && hasEnemy(colorName, testI, testJ, Grid)) {
+		if (!isOpen(testI, testJ, Grid) && Grid[testI][testJ].type === "King" && hasEnemy(colorName, testI, testJ, Grid)) {
 			return true;
 		}
 	}
@@ -219,8 +219,8 @@ function findWithIncrement(colorName, i, j, iInc, jInc, Grid) {
 	}
 }
 
-function pushOptionIfOpenOrEnemy(colorName, i, j, Grid) {
+function pushOptionIfOpenOrEnemy(colorName, initI, initJ, i, j, Grid) {
 	if (0 <= i && i < columns && 0 <= j && j < rows && (isOpen(i, j, Grid) || hasEnemy(colorName, i, j, Grid))) {
-		Grid.options.push(new Move(i, j, i, j, moveScore(i, j)));
+		Grid.options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
 	}
 }
