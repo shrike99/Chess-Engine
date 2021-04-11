@@ -66,7 +66,9 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option, issearching =
 			Grid[currX][currY] = new Queen(Grid[currX][currY].colorName);
 		}
 
-		Grid[currX][currY].moved = true;
+		if (!issearching) {
+			Grid[currX][currY].moved = true;
+		}
 
 		//const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
 

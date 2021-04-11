@@ -186,13 +186,13 @@ function mouseClicked() {
 // const delay = ms => new Promise(res => setTimeout(res, ms))
 
 function computerTurn() {
-	//randomMove();
-
+	randomMove();
 	var searched = Search(2, turnColour);
+	console.log("❔ - computerTurn - searched", searched);
 
-	var move = searched[1];
+	// var move = searched[1];
 
-	MovePiece(move.initX, move.initY, move.endX, move.endY, grid, move);
+	// MovePiece(move.initX, move.initY, move.endX, move.endY, grid, move);
 	turnColour = WHITE;
 }
 
