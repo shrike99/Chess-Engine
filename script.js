@@ -186,13 +186,17 @@ function mouseClicked() {
 // const delay = ms => new Promise(res => setTimeout(res, ms))
 
 function computerTurn() {
-	randomMove();
+	//randomMove();
 	var searched = Search(2, turnColour);
-	console.log("❔ - computerTurn - searched", searched);
+	console.log("❔ FOUND:", searched);
+	console.log("❔ FOUND GRID:", searched);
+	console.log("❔ WENT THROUGH:", gonethrough);
 
-	// var move = searched[1];
+	gonethrough = 0;
 
-	// MovePiece(move.initX, move.initY, move.endX, move.endY, grid, move);
+	var move = searched[1];
+
+	MovePiece(move.initX, move.initY, move.endX, move.endY, grid, move);
 	turnColour = WHITE;
 }
 
@@ -204,7 +208,7 @@ function removeArr(arr, element) {
 	}
 }
 
-function Eval() {
+function EvalClick() {
 	Search(1, BLACK);
 }
 

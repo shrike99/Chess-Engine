@@ -61,6 +61,10 @@ function SearchWithin(col, depth, Grid) {
 	});
 }
 
+var maxMove;
+
+var gonethrough = 0;
+
 function negaMax(col, depth, Grid) {
 	if (depth == 0) {
 		var e = EvaluatePosition(Grid, col);
@@ -69,10 +73,7 @@ function negaMax(col, depth, Grid) {
 	}
 
 	var pieceMovesList = getAllMoves(col, Grid);
-	//pieceMovesList.splice(1);
 	var max = -1000;
-	var maxMove;
-	var g;
 
 	var othercol = col == WHITE ? BLACK : WHITE;
 
@@ -87,17 +88,16 @@ function negaMax(col, depth, Grid) {
 
 			MovePiece(element[0][0], element[0][1], endX, endY, tempG, currMove, true);
 
+			gonethrough++;
+
 			score = -negaMax(othercol, depth - 1, deepclone(tempG));
 
-			if (score != NaN && (score > max || score[0] > max)) {
+			if (score != NaN && score > max) {
 				max = score;
-				// maxMove = currMove;
-				// g = tempG;
+				maxMove = currMove;
 			}
 		});
 	});
-
-	// return [max, maxMove, g];
 	return max;
 }
 
@@ -131,7 +131,7 @@ function Search(depth, col) {
 
 	var eval = negaMax(col, depth, clone);
 
-	return eval;
+	return [eval, maxMove];
 }
 
 function findHighest(arr) {
