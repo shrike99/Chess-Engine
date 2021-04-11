@@ -111,11 +111,12 @@ function draw() {
 				fill("#313B48");
 			}
 
-			if (!isOpen(i, j) && grid.inCheck == grid[i][j].colorName && grid[i][j].type == "King") {
-				fill("#FD4D4D");
-			}
-
 			noStroke();
+
+			if (!isOpen(i, j) && grid.inCheck == grid[i][j].colorName && grid[i][j].type == "King") {
+				stroke("#FD4D4D");
+				strokeWeight(3);
+			}
 
 			rect(i * w, j * h, w, h);
 			if (grid[i][j] instanceof Piece) {
@@ -128,10 +129,31 @@ function draw() {
 		circle(grid.options[i].endX * w + w / 2, grid.options[i].endY * h + h / 2, w - 60);
 	}
 
-	// if (turnColour == computerCol && !stopGame) {
-	// 	computerTurn();
-	// }
+	if (turnColour == computerCol && !stopGame) {
+		computerTurn();
+	}
 }
+
+// var arrowStartX;
+// var arrowStartY;
+
+// function mousePressed() {
+// 	if (!stopGame && 0 <= mouseX && mouseX <= WIDTH && 0 <= mouseY && mouseY <= HEIGHT && mouseButton == RIGHT) {
+// 		if (arrowStartX == undefined && arrowStartY == undefined) {
+// 			arrowStartX = mouseX;
+// 			arrowStartY = mouseY;
+// 		} else {
+// 			var val1 = arrowStartX;
+// 			var val2 = arrowStartY;
+// 			var v0 = createVector(val1, val2);
+// 			var v1 = createVector(mouseX, mouseY);
+// 			drawArrow(v0, v1, "black");
+
+// 			arrowStartX = undefined;
+// 			arrowStartY = undefined;
+// 		}
+// 	}
+// }
 
 function mouseClicked() {
 	// && turnColour == WHITE
@@ -163,10 +185,10 @@ function mouseClicked() {
 
 // const delay = ms => new Promise(res => setTimeout(res, ms))
 
-async function computerTurn() {
+function computerTurn() {
 	randomMove();
 
-	Search(3, BLACK);
+	//Search(1, turnColour);
 	turnColour = WHITE;
 }
 
@@ -179,9 +201,7 @@ function removeArr(arr, element) {
 }
 
 function Eval() {
-	//UndoMove();
-	// setGrid(grid);
-	console.log("EVAL:", Search(10, WHITE));
+	Search(2, BLACK);
 }
 
 function randomMove() {

@@ -37,37 +37,68 @@ function getAllMoves(col, Grid = grid) {
 var highest = -100;
 var bestMove = [];
 
-function SearchWithin(x, y, move, col, depth, Grid, rootmove = [x, y, move]) {
+var rootmove;
+
+function SearchWithin(col, depth, Grid) {
 	if (depth == 0) {
 		var eval = EvaluatePosition(Grid);
 		if (highest < eval) {
 			highest = eval;
 			bestMove = rootmove;
 		}
-		// console.log("❔ - SearchWithin - eval", eval);
-		return eval;
+		return;
 	}
 
 	var othercol = col == WHITE ? BLACK : WHITE;
 
-	var { endX, endY } = move;
-
-	MovePiece(x, y, endX, endY, Grid, move, true);
-
-	var pieceMovesList = getAllMoves(othercol, Grid);
+	var pieceMovesList = getAllMoves(col, Grid);
 
 	pieceMovesList.forEach((element) => {
-		element[1].forEach((curr) => {
-			var currX = element[0][0];
-			var currY = element[0][1];
-			var eval = -SearchWithin(currX, currY, curr, othercol, depth - 1, deepclone(Grid), rootmove);
-			if (highest < eval) {
-				highest = eval;
-				bestMove = rootmove;
-			}
-			return eval;
+		element[1].forEach((currMove) => {
+			console.log("❔ - move", currMove);
+			console.log("❔ - Grid", Grid);
+			var { initX, initY, endX, endY } = currMove;
+
+			MovePiece(initX, initY, endX, endY, deepclone(Grid), currMove, true);
+			console.log("❔ - Grid after", Grid);
+			SearchWithin(othercol, depth - 1, deepclone(Grid));
 		});
 	});
+}
+
+function negaMax(col, depth, Grid) {
+	if (depth == 0) {
+		var e = EvaluatePosition(Grid, col);
+		console.log("EVALUATION:", e);
+		return e;
+	}
+
+	console.log("GRID:", Grid);
+
+	var pieceMovesList = getAllMoves(col, Grid);
+	var max = -1000;
+
+	var othercol = col == WHITE ? BLACK : WHITE;
+
+	pieceMovesList.forEach((element) => {
+		element[1].forEach((currMove) => {
+			var { initX, initY, endX, endY } = currMove;
+
+			var tempG = deepclone(Grid);
+
+			MovePiece(initX, initY, endX, endY, tempG, currMove, true);
+
+			score = -negaMax(othercol, depth - 1, deepclone(tempG));
+
+			console.log("RETURNED SCORE:", score);
+
+			if (score > max) {
+				max = score;
+			}
+		});
+	});
+
+	return max;
 }
 
 function Search(depth, col) {
@@ -96,31 +127,22 @@ function Search(depth, col) {
 		}
 	}
 
-	var chosen = null;
+	var clone = deepclone(grid);
+	console.log("❔ - Search - clone", clone);
 
-	for (iI = 0; iI < pieceMovesList.length; iI++) {
-		for (jI = 0; jI < pieceMovesList[iI][1].length; jI++) {
-			var curr = pieceMovesList[iI][1][jI];
-			var x = pieceMovesList[iI][0][0];
-			var y = pieceMovesList[iI][0][1];
+	console.log("ANS:", negaMax(col, depth, clone));
 
-			var clone = deepclone(grid);
+	//SearchWithin(col, depth, deepclone(grid));
 
-			//var eval = EvaluateMove(x, y, curr, col, clone)
+	// chosen = bestMove;
 
-			SearchWithin(x, y, curr, col, depth, clone);
-		}
-	}
+	// var { endX, endY } = chosen[2];
 
-	chosen = bestMove;
+	// console.log("a");
 
-	var { endX, endY } = chosen[2];
+	// MovePiece(chosen[0], chosen[1], endX, endY, grid, chosen[2]);
 
-	console.log("a");
-
-	MovePiece(chosen[0], chosen[1], endX, endY, grid, chosen[2]);
-
-	return chosen;
+	// return chosen;
 }
 
 function findHighest(arr) {

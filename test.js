@@ -1,0 +1,288 @@
+grid = [
+	[
+		{
+			type: "Rook",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		null,
+		{
+			type: "Pawn",
+			color: 0,
+			colorName: "BLACK",
+			moved: true,
+			turn: -1,
+		},
+		null,
+		null,
+		null,
+		{
+			type: "Pawn",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Rook",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+	],
+	[
+		null,
+		{
+			type: "Pawn",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		null,
+		null,
+		null,
+		null,
+		{
+			type: "Pawn",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Knight",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+	],
+	[
+		{
+			type: "Bishop",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Pawn",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Knight",
+			color: 0,
+			colorName: "BLACK",
+			moved: true,
+			turn: -1,
+		},
+		null,
+		null,
+		null,
+		{
+			type: "Pawn",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Bishop",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+	],
+	[
+		{
+			type: "Queen",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Pawn",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		null,
+		null,
+		null,
+		null,
+		{
+			type: "Pawn",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Queen",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+	],
+	[
+		{
+			type: "King",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Pawn",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		null,
+		null,
+		null,
+		{
+			type: "Pawn",
+			color: 255,
+			colorName: "WHITE",
+			moved: true,
+			turn: -1,
+		},
+		null,
+		{
+			type: "King",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+	],
+	[
+		{
+			type: "Bishop",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Pawn",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		null,
+		null,
+		null,
+		null,
+		{
+			type: "Pawn",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Bishop",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+	],
+	[
+		{
+			type: "Knight",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		null,
+		{
+			type: "Pawn",
+			color: 0,
+			colorName: "BLACK",
+			moved: true,
+			turn: -1,
+		},
+		null,
+		null,
+		null,
+		{
+			type: "Pawn",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Knight",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+	],
+	[
+		{
+			type: "Rook",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Pawn",
+			color: 0,
+			colorName: "BLACK",
+			moved: false,
+			turn: -1,
+		},
+		null,
+		null,
+		null,
+		null,
+		{
+			type: "Pawn",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+		{
+			type: "Rook",
+			color: 255,
+			colorName: "WHITE",
+			moved: false,
+			turn: -1,
+		},
+	],
+];
+
+function deepclone(grid) {
+	var clone = [];
+	for (i = 0; i < grid.length; i++) {
+		clone[i] = [...grid[i]];
+	}
+	return clone;
+}
+
+var clone = deepclone(grid);
+
+grid[1][1] = "hello my friend";
+
+console.log(grid == clone, grid[1][1], clone[1][1]);
