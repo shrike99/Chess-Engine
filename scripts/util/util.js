@@ -92,11 +92,10 @@ function getScore(pieces) {
 	return score;
 }
 
-function deepclone(grid) {
-	var clone = [];
-	for (i = 0; i < grid.length; i++) {
-		clone[i] = [...grid[i]];
-	}
+function deepclone(Grid) {
+	var clone = Grid.map(function (arr) {
+		return [...arr];
+	});
 	return clone;
 }
 

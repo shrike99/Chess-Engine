@@ -34,11 +34,6 @@ function getAllMoves(col, Grid = grid) {
 	return pieceMovesList;
 }
 
-var highest = -100;
-var bestMove = [];
-
-var rootmove;
-
 function SearchWithin(col, depth, Grid) {
 	if (depth == 0) {
 		var eval = EvaluatePosition(Grid);
@@ -69,36 +64,39 @@ function SearchWithin(col, depth, Grid) {
 function negaMax(col, depth, Grid) {
 	if (depth == 0) {
 		var e = EvaluatePosition(Grid, col);
-		console.log("EVALUATION:", e);
+		console.log("Evaluated pos:", e);
 		return e;
 	}
 
-	console.log("GRID:", Grid);
-
 	var pieceMovesList = getAllMoves(col, Grid);
 	var max = -1000;
+	var maxMove;
+	var g;
 
 	var othercol = col == WHITE ? BLACK : WHITE;
 
 	pieceMovesList.forEach((element) => {
 		element[1].forEach((currMove) => {
-			var { initX, initY, endX, endY } = currMove;
+			var { endX, endY } = currMove;
+
+			currMove.initX = element[0][0];
+			currMove.initY = element[0][1];
 
 			var tempG = deepclone(Grid);
 
-			MovePiece(initX, initY, endX, endY, tempG, currMove, true);
+			MovePiece(element[0][0], element[0][1], endX, endY, tempG, currMove, true);
 
 			score = -negaMax(othercol, depth - 1, deepclone(tempG));
 
-			console.log("RETURNED SCORE:", score);
-
 			if (score > max) {
 				max = score;
+				maxMove = currMove;
+				g = tempG;
 			}
 		});
 	});
 
-	return max;
+	return [max, maxMove, g];
 }
 
 function Search(depth, col) {
@@ -128,21 +126,8 @@ function Search(depth, col) {
 	}
 
 	var clone = deepclone(grid);
-	console.log("❔ - Search - clone", clone);
 
-	console.log("ANS:", negaMax(col, depth, clone));
-
-	//SearchWithin(col, depth, deepclone(grid));
-
-	// chosen = bestMove;
-
-	// var { endX, endY } = chosen[2];
-
-	// console.log("a");
-
-	// MovePiece(chosen[0], chosen[1], endX, endY, grid, chosen[2]);
-
-	// return chosen;
+	return negaMax(col, depth, clone);
 }
 
 function findHighest(arr) {

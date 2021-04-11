@@ -186,9 +186,13 @@ function mouseClicked() {
 // const delay = ms => new Promise(res => setTimeout(res, ms))
 
 function computerTurn() {
-	randomMove();
+	//randomMove();
 
-	//Search(1, turnColour);
+	var searched = Search(2, turnColour);
+
+	var move = searched[1];
+
+	MovePiece(move.initX, move.initY, move.endX, move.endY, grid, move);
 	turnColour = WHITE;
 }
 
@@ -201,7 +205,7 @@ function removeArr(arr, element) {
 }
 
 function Eval() {
-	Search(2, BLACK);
+	Search(1, BLACK);
 }
 
 function randomMove() {
