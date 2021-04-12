@@ -186,17 +186,17 @@ function mouseClicked() {
 // const delay = ms => new Promise(res => setTimeout(res, ms))
 
 function computerTurn() {
-	//randomMove();
-	var searched = Search(2, turnColour);
-	console.log("❔ FOUND:", searched);
-	console.log("❔ FOUND GRID:", searched);
+	randomMove();
+	var searched = Search(3, turnColour);
+	//console.log("❔ FOUND:", searched);
+	// console.log("❔ FOUND GRID:", searched);
 	console.log("❔ WENT THROUGH:", gonethrough);
 
 	gonethrough = 0;
 
-	var move = searched[1];
+	//var move = searched[1];
 
-	MovePiece(move.initX, move.initY, move.endX, move.endY, grid, move);
+	//MovePiece(move.initX, move.initY, move.endX, move.endY, grid, move);
 	turnColour = WHITE;
 }
 

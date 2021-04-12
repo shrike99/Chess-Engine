@@ -212,15 +212,22 @@ function isAttackedWithIncrement(colorName, i, j, iInc, jInc, types, Grid) {
 	return false;
 }
 
-function findWithIncrement(colorName, i, j, iInc, jInc, Grid) {
+function PieceScore(piece) {
+	if (piece) {
+		return pieceScores.find((x) => x[0] == piece.type)[1];
+	}
+	return 0;
+}
+
+function findWithIncrement(colorName, posI, posJ, i, j, iInc, jInc, Grid) {
 	var initI = i,
 		initJ = j;
 	while (0 <= i && i < columns && 0 <= j && j < rows) {
 		if (isOpen(i, j, Grid)) {
-			Grid.options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
+			Grid.options.push(new Move(posI, posJ, i, j, moveScore(posI, posJ, i, j, deepclone(Grid))));
 		} else {
 			if (hasEnemy(colorName, i, j, Grid)) {
-				Grid.options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
+				Grid.options.push(new Move(posI, posJ, i, j, moveScore(posI, posJ, i, j, deepclone(Grid))));
 			}
 			break;
 		}
@@ -231,6 +238,6 @@ function findWithIncrement(colorName, i, j, iInc, jInc, Grid) {
 
 function pushOptionIfOpenOrEnemy(colorName, initI, initJ, i, j, Grid) {
 	if (0 <= i && i < columns && 0 <= j && j < rows && (isOpen(i, j, Grid) || hasEnemy(colorName, i, j, Grid))) {
-		Grid.options.push(new Move(initI, initJ, i, j, moveScore(i, j)));
+		Grid.options.push(new Move(initI, initJ, i, j, moveScore(initI, initJ, i, j, deepclone(Grid))));
 	}
 }

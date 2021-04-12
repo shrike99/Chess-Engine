@@ -104,6 +104,9 @@ class Pawn extends Piece {
 	}
 	findLegalMoves(i, j, Grid = grid) {
 		current = [i, j];
+		var initI = i,
+			initJ = j;
+
 		Grid.options = [];
 		const direction = this.colorName == WHITE ? -1 : 1;
 		const enpassantrow = this.colorName == WHITE ? 3 : 4;
@@ -111,32 +114,32 @@ class Pawn extends Piece {
 
 		if (!isOpen(i + 1, j, Grid) && hasEnemy(this.colorName, i + 1, j, Grid) && j == enpassantrow) {
 			if (Grid[i + 1][nextRow + direction * -1].turn == turn - 1 || Grid[i + 1][nextRow + direction * -1].turn == -1) {
-				Grid.options.push(new Move(i, j, i + 1, nextRow, moveScore(i + 1, nextRow), ENPASSANT));
+				Grid.options.push(new Move(initI, initJ, i + 1, nextRow, moveScore(initI, initJ, i + 1, nextRow, deepclone(Grid)), ENPASSANT));
 			}
 		}
 
 		if (!isOpen(i - 1, j, Grid) && hasEnemy(this.colorName, i - 1, j, Grid) && j == enpassantrow) {
 			if (Grid[i - 1][nextRow + direction * -1].turn == turn - 1 || Grid[i - 1][nextRow + direction * -1].turn == -1) {
-				Grid.options.push(new Move(i, j, i - 1, nextRow, moveScore(i - 1, nextRow), ENPASSANT));
+				Grid.options.push(new Move(initI, initJ, i - 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, deepclone(Grid)), ENPASSANT));
 			}
 		}
 
 		if (0 <= nextRow && nextRow < rows && isOpen(i, nextRow, Grid)) {
-			Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
+			Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid))));
 			nextRow += direction;
 			if (0 <= nextRow && nextRow < rows && isOpen(i, nextRow, Grid) && !this.moved) {
-				Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow), DOUBLE));
+				Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid)), DOUBLE));
 			}
 		}
 		nextRow = j + direction;
 
 		i--;
 		if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow, Grid) && !isOpen(i, nextRow, Grid)) {
-			Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
+			Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid))));
 		}
 		i += 2;
 		if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow, Grid) && !isOpen(i, nextRow, Grid)) {
-			Grid.options.push(new Move(i, j, i, nextRow, moveScore(i, nextRow)));
+			Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid))));
 		}
 	}
 }
@@ -150,10 +153,10 @@ class Rook extends Piece {
 		Grid.options = [];
 		current = [i, j];
 
-		findWithIncrement(this.colorName, i + 1, j, 1, 0, Grid);
-		findWithIncrement(this.colorName, i, j + 1, 0, 1, Grid);
-		findWithIncrement(this.colorName, i - 1, j, -1, 0, Grid);
-		findWithIncrement(this.colorName, i, j - 1, 0, -1, Grid);
+		findWithIncrement(this.colorName, i, j, i + 1, j, 1, 0, Grid);
+		findWithIncrement(this.colorName, i, j, i, j + 1, 0, 1, Grid);
+		findWithIncrement(this.colorName, i, j, i - 1, j, -1, 0, Grid);
+		findWithIncrement(this.colorName, i, j, i, j - 1, 0, -1, Grid);
 	}
 }
 
@@ -193,10 +196,10 @@ class Bishop extends Piece {
 		Grid.options = [];
 		current = [i, j];
 
-		findWithIncrement(this.colorName, i + 1, j + 1, 1, 1, Grid);
-		findWithIncrement(this.colorName, i - 1, j - 1, -1, -1, Grid);
-		findWithIncrement(this.colorName, i + 1, j - 1, 1, -1, Grid);
-		findWithIncrement(this.colorName, i - 1, j + 1, -1, 1, Grid);
+		findWithIncrement(this.colorName, i, j, i + 1, j + 1, 1, 1, Grid);
+		findWithIncrement(this.colorName, i, j, i - 1, j - 1, -1, -1, Grid);
+		findWithIncrement(this.colorName, i, j, i + 1, j - 1, 1, -1, Grid);
+		findWithIncrement(this.colorName, i, j, i - 1, j + 1, -1, 1, Grid);
 	}
 }
 
@@ -240,7 +243,7 @@ class King extends Piece {
 			if (Grid[testI][j].type === "Rook" && !Grid[testI][j].moved) {
 				if (!isBeingAttacked(this.colorName, i + 1, j, ...Array(4), Grid) && !isBeingAttacked(this.colorName, i + 2, j, ...Array(4), Grid)) {
 					console.log("rook found");
-					Grid.options.push(new Move(i, j, i + 2, j, moveScore(i + 2, j), CASTLE));
+					Grid.options.push(new Move(i, j, i + 2, j, moveScore(i, j, i + 2, j, deepclone(Grid)), CASTLE));
 				}
 			}
 
@@ -254,7 +257,7 @@ class King extends Piece {
 
 			if (Grid[testI][j].type === "Rook" && !Grid[testI][j].moved) {
 				if (!isBeingAttacked(this.colorName, i - 1, j, ...Array(4), Grid) && !isBeingAttacked(this.colorName, i - 2, j, ...Array(4), Grid)) {
-					Grid.options.push(new Move(i, j, i - 2, j, moveScore(i - 2, j), CASTLE));
+					Grid.options.push(new Move(i, j, i - 2, j, moveScore(i, j, i - 2, j, deepclone(Grid)), CASTLE));
 				}
 			}
 		}
@@ -270,14 +273,14 @@ class Queen extends Piece {
 		Grid.options = [];
 		current = [i, j];
 
-		findWithIncrement(this.colorName, i + 1, j + 1, 1, 1, Grid);
-		findWithIncrement(this.colorName, i - 1, j - 1, -1, -1, Grid);
-		findWithIncrement(this.colorName, i + 1, j - 1, 1, -1, Grid);
-		findWithIncrement(this.colorName, i - 1, j + 1, -1, 1, Grid);
-		findWithIncrement(this.colorName, i + 1, j, 1, 0, Grid);
-		findWithIncrement(this.colorName, i, j + 1, 0, 1, Grid);
-		findWithIncrement(this.colorName, i - 1, j, -1, 0, Grid);
-		findWithIncrement(this.colorName, i, j - 1, 0, -1, Grid);
+		findWithIncrement(this.colorName, i, j, i + 1, j + 1, 1, 1, Grid);
+		findWithIncrement(this.colorName, i, j, i - 1, j - 1, -1, -1, Grid);
+		findWithIncrement(this.colorName, i, j, i + 1, j - 1, 1, -1, Grid);
+		findWithIncrement(this.colorName, i, j, i - 1, j + 1, -1, 1, Grid);
+		findWithIncrement(this.colorName, i, j, i + 1, j, 1, 0, Grid);
+		findWithIncrement(this.colorName, i, j, i, j + 1, 0, 1, Grid);
+		findWithIncrement(this.colorName, i, j, i - 1, j, -1, 0, Grid);
+		findWithIncrement(this.colorName, i, j, i, j - 1, 0, -1, Grid);
 	}
 }
 

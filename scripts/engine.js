@@ -1,9 +1,10 @@
 var pieceScores = [
-	["Pawn", 1],
-	["Bishop", 3],
-	["Knight", 3],
-	["Rook", 5],
-	["Queen", 9],
+	["Pawn", 100],
+	["Bishop", 300],
+	["Knight", 300],
+	["Rook", 500],
+	["Queen", 900],
+	["King", 9000],
 ];
 
 function getAllMoves(col, Grid = grid) {
@@ -65,40 +66,98 @@ var maxMove;
 
 var gonethrough = 0;
 
-function negaMax(col, depth, Grid) {
+// function negaMax(col, depth, Grid) {
+// 	if (depth == 0) {
+// 		var e = EvaluatePosition(Grid, col);
+// 		return e;
+// 	}
+
+// 	var pieceMovesList = getAllMoves(col, Grid);
+
+// 	if (pieceMovesList.length == 0) {
+// 		//MATE
+// 		if (Mate(col, Grid.inCheck, Grid)) {
+// 			return Number.NEGATIVE_INFINITY;
+// 		}
+// 		//STALEMATE
+// 		else {
+// 			return 0;
+// 		}
+// 	}
+
+// 	var max = -1000;
+
+// 	var othercol = col == WHITE ? BLACK : WHITE;
+
+// 	pieceMovesList.forEach((element) => {
+// 		element[1].forEach((currMove) => {
+// 			var { endX, endY } = currMove;
+
+// 			currMove.initX = element[0][0];
+// 			currMove.initY = element[0][1];
+
+// 			var tempG = deepclone(Grid);
+
+// 			MovePiece(element[0][0], element[0][1], endX, endY, tempG, currMove, true);
+
+// 			gonethrough++;
+
+// 			score = -negaMax(othercol, depth - 1, deepclone(tempG));
+
+// 			if (score != NaN && score > max) {
+// 				max = score;
+// 			}
+// 		});
+// 	});
+// 	return max;
+// }
+
+function negaMax(col, depth, alpha, beta, Grid) {
 	if (depth == 0) {
 		var e = EvaluatePosition(Grid, col);
-		console.log("Evaluated pos:", e);
 		return e;
 	}
 
 	var pieceMovesList = getAllMoves(col, Grid);
-	var max = -1000;
+
+	//pieceMovesList.splice(1);
+
+	pieceMovesList = SortMoves(pieceMovesList);
+
+	if (pieceMovesList.length == 0) {
+		//MATE
+		if (Mate(col, Grid.inCheck, Grid)) {
+			return Number.NEGATIVE_INFINITY;
+		}
+		//STALEMATE
+		else {
+			return 0;
+		}
+	}
+
+	//var max = -1000;
 
 	var othercol = col == WHITE ? BLACK : WHITE;
 
 	pieceMovesList.forEach((element) => {
 		element[1].forEach((currMove) => {
-			var { endX, endY } = currMove;
-
-			currMove.initX = element[0][0];
-			currMove.initY = element[0][1];
+			var { initX, initY, endX, endY } = currMove;
 
 			var tempG = deepclone(Grid);
 
-			MovePiece(element[0][0], element[0][1], endX, endY, tempG, currMove, true);
+			MovePiece(initX, initY, endX, endY, tempG, currMove, true);
 
 			gonethrough++;
 
-			score = -negaMax(othercol, depth - 1, deepclone(tempG));
+			score = -negaMax(othercol, depth - 1, -beta, -alpha, deepclone(tempG));
 
-			if (score != NaN && score > max) {
-				max = score;
-				maxMove = currMove;
+			if (score >= beta) {
+				return beta; //cut it off
 			}
+			alpha = Math.max(alpha, score);
 		});
 	});
-	return max;
+	return alpha;
 }
 
 function Search(depth, col) {
@@ -129,7 +188,7 @@ function Search(depth, col) {
 		}
 	}
 
-	var eval = negaMax(col, depth, clone);
+	var eval = negaMax(col, depth, -1000, -1000, clone);
 
 	return [eval, maxMove];
 }
@@ -157,13 +216,42 @@ function findHighest(arr) {
 	return [highestI, highestJ];
 }
 
-function moveScore(piece, x, y) {
-	var pieceTake = grid[x][y];
-	if (pieceTake != undefined) {
-		var takeScore = pieceScores.find((x) => x[0] == pieceTake.type)[1];
-		var pieceScore = pieceScores.find((x) => x[0] == pieceScore.type)[1];
-		console.log(pieceScore);
-		return pieceScore;
+function compareScores(a, b) {
+	if (a.score < b.score) {
+		return 1;
+	}
+	if (a.score > b.score) {
+		return -1;
 	}
 	return 0;
+}
+
+function SortMoves(moves) {
+	for (i = 0; i < moves.length; i++) {
+		moves[i][1].sort(compareScores);
+	}
+
+	return moves;
+}
+
+function moveScore(initX, initY, endX, endY, Grid) {
+	var score = 0;
+
+	//taking a piece
+	if (Grid[initX][initY]) {
+		score += 10 * PieceScore(Grid[endX][endY]) - 10 * PieceScore(Grid[initX][initY]);
+	} else {
+		console.log("%c Piece is null! ", "font-style:bold; color: #fd4d4d");
+	}
+
+	//promoting
+	if (Grid[initX][initY].type == "PAWN") {
+		score += 900;
+	}
+
+	if (score > 0) {
+		console.log(`%c Returned score is: ${score}`, "font-style:bold; color: #bada55");
+	}
+
+	return score;
 }
