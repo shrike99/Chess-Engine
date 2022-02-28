@@ -4,10 +4,10 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-let zobristArr = new Array(64);
-for (let i = 0; i < 64; i++) {
-	zobristArr[i] = new Array(12);
-	for (let j = 0; j < 12; j++) {
+let zobristArr = new Array(8);
+for (let i = 0; i < 8; i++) {
+	zobristArr[i] = new Array(8);
+	for (let j = 0; j < 8; j++) {
 		zobristArr[i][j] = new Array(2);
 		for (let k = 0; k < 2; k++) {
 			zobristArr[i][j][k] = getRandomInt(0, 2147483647);
@@ -123,7 +123,16 @@ class Board {
 		return pieceMovesList;
 	}
 
-	MovePiece(currX, currY, pressedX, pressedY, option) {
+	EvaluatePosition(col) {
+		const black = getBlack(this.grid),
+			white = getWhite(this.grid),
+			blackScore = getScore(black),
+			whiteScore = getScore(white);
+
+		return col === WHITE ? whiteScore - blackScore : blackScore - whiteScore;
+	}
+
+	MovePiece(currX, currY, pressedX, pressedY, option, col) {
 		let pieceinoption = this.grid[pressedX][pressedY],
 			end = this.grid[currX][currY].colorName === WHITE ? 0 : rows - 1;
 
@@ -177,12 +186,12 @@ class Board {
 		// check if enemy king is in check
 		for (let i = 0; i < this.grid.length; i++) {
 			for (let j = 0; j < this.grid[i].length; j++) {
-				if (!isEmpty(i, j, this.grid) && this.grid[i][j].type === 'King' && this.grid[i][j].colorName === turnColour) {
+				if (!isEmpty(i, j, this.grid) && this.grid[i][j].type === 'King' && this.grid[i][j].colorName === col) {
 					if (this.grid !== grid) continue;
 
-					if (isBeingAttacked(turnColour, i, j, ...Array(4), this.grid)) {
-						this.grid.inCheck = turnColour;
-						document.getElementById('check').innerText = `${turnColour} is in check`;
+					if (isBeingAttacked(col, i, j, ...Array(4), this.grid)) {
+						this.grid.inCheck = col;
+						if (this.mainBoard) document.getElementById('check').innerText = `${turnColour} is in check`;
 					} else {
 						this.grid.inCheck = null;
 						document.getElementById('check').innerText = `${turnColour}'s turn`;

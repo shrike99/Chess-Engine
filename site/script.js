@@ -164,7 +164,10 @@ function removeArr(arr, element) {
 }
 
 function EvalClick() {
-	console.log(getMoves(deepclone(grid), WHITE, depthValue));
+	console.log('1:', test(1, x));
+	console.log('2:', test(2, x));
+	console.log('3:', test(3, x));
+	console.log('4:', test(4, x));
 }
 
 function randomMove() {

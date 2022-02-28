@@ -1,6 +1,4 @@
 function findMoves(pressedX, pressedY, Grid = grid) {
-	//console.time(`Time to find moves (${Grid[pressedX][pressedY].type})`);
-
 	Grid[pressedX][pressedY].findLegalMoves(pressedX, pressedY, Grid);
 
 	if (Grid[pressedX][pressedY].type === 'King') {
@@ -19,42 +17,10 @@ function findMoves(pressedX, pressedY, Grid = grid) {
 			}
 		}
 	}
-	//console.timeEnd(`Time to find moves (${Grid[pressedX][pressedY].type})`);
 }
 
 function handlePromotion(currX, currY) {
 	Grid[currX][currY] = new Queen(Grid[currX][currY].colorName);
-}
-
-function EvaluatePosition(Grid, col = computerCol) {
-	const black = getBlack(Grid),
-		white = getWhite(Grid),
-		blackScore = getScore(black),
-		whiteScore = getScore(white);
-
-	//console.log('EVALUATION FOUND:', col === WHITE ? whiteScore - blackScore : blackScore - whiteScore);
-
-	return col === WHITE ? whiteScore - blackScore : blackScore - whiteScore;
-}
-
-function EvaluateMove(x1, y1, move, col, Grid) {
-	let score = 0;
-	const { endX, endY } = move,
-		piece = Grid[x1][y1];
-
-	Grid[endX][endY] = piece;
-
-	Grid[x1][y1] = null;
-
-	const black = getBlack(Grid),
-		white = getWhite(Grid),
-		blackScore = getScore(black),
-		whiteScore = getScore(white);
-
-	score = col === WHITE ? whiteScore - blackScore : blackScore - whiteScore;
-	score += heatMapScore(piece, endX, endY);
-
-	return score;
 }
 
 function MovePiece(currX, currY, pressedX, pressedY, Grid, option, isSearching = false) {
