@@ -139,10 +139,9 @@ function updateDepth() {
 // const delay = ms => new Promise(res => setTimeout(res, ms))
 
 function computerTurn() {
-	let searched = Search(depthValue, BLACK);
+	//let searched = Search(depthValue, BLACK);
 	randomMove();
-	//console.log("❔ FOUND:", searched);
-	// console.log("❔ FOUND GRID:", searched);
+
 	console.log('❔ WENT THROUGH:', gonethrough);
 	console.log('❔ TOOK:', searched[2]);
 	console.log('❔ BEST:', searched);
