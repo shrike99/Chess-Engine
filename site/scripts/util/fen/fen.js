@@ -32,7 +32,7 @@ class FENBoard {
 	 * @param {string} square - The square. Eg: "a2"
 	 */
 	clear(square) {
-		this.put(square, "");
+		this.put(square, '');
 	}
 
 	/**
@@ -44,7 +44,7 @@ class FENBoard {
 	move(from, to) {
 		const piece = this.piece(from);
 		if (!piece) {
-			throw new Error("Move Error: the from square was empty");
+			throw new Error('Move Error: the from square was empty');
 		}
 		this.put(to, piece);
 		this.clear(from);
@@ -62,7 +62,7 @@ class FENBoard {
 		}); // eslint-disable-line no-param-reassign
 
 		if (!fen) return;
-		if (fen === "start") fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"; // eslint-disable-line
+		if (fen === 'start') fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR'; // eslint-disable-line
 
 		let rank = 0;
 		let file = 0;
@@ -74,10 +74,10 @@ class FENBoard {
 		while (fenIndex < fen.length) {
 			fenChar = fen[fenIndex];
 
-			if (fenChar === " ") {
+			if (fenChar === ' ') {
 				break; // ignore the rest
 			}
-			if (fenChar === "/") {
+			if (fenChar === '/') {
 				rank++;
 				file = 0;
 				fenIndex++;
@@ -90,7 +90,7 @@ class FENBoard {
 			} else {
 				count = parseInt(fenChar, 10);
 				for (let i = 0; i < count; i++) {
-					this._setPiece(file, rank, "");
+					this._setPiece(file, rank, '');
 					file++;
 				}
 			}
@@ -121,10 +121,10 @@ class FENBoard {
 			if (empty > 0) {
 				fen.push(empty);
 			}
-			fen.push("/");
+			fen.push('/');
 		}
 		fen.pop();
-		return fen.join("");
+		return fen.join('');
 	}
 
 	_setPiece(file, rank, fenChar) {

@@ -1,23 +1,20 @@
-var whiteTimer;
-var blackTimer;
-
-var timeBlack = 150;
-var timeWhite = 150;
-var increment = 3;
+let whiteTimer,
+	blackTimer,
+	timeBlack = 150,
+	timeWhite = 1350,
+	increment = 3;
 
 function blkTicker() {
 	if (timeBlack > 0) {
 		timeBlack--;
-		var time = formatTime(timeBlack);
-		timerBlack.innerText = time;
-	}
+		timerBlack.innerText = formatTime(timeBlack);
+	} else stopGame = true;
 }
 function whtTicker() {
 	if (timeWhite > 0) {
 		timeWhite--;
-		var time = formatTime(timeWhite);
-		timerWhite.innerText = time;
-	}
+		timerWhite.innerText = formatTime(timeWhite);
+	} else stopGame = true;
 }
 
 function blkCountdown() {

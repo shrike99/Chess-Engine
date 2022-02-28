@@ -1,6 +1,6 @@
 @font-face {
-	font-family: "intersemi_bold";
-	src: url("fonts/rasmusandersson-inter-semi-bold-webfont.woff2") format("woff2"), url("fonts/rasmusandersson-inter-semi-bold-webfont.woff") format("woff");
+	font-family: 'intersemi_bold';
+	src: url('fonts/rasmusandersson-inter-semi-bold-webfont.woff2') format('woff2'), url('fonts/rasmusandersson-inter-semi-bold-webfont.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -10,7 +10,7 @@
 	--shadered: #fd6868;
 }
 
-input[type="text"],
+input[type='text'],
 select {
 	width: 100%;
 	margin-top: 30px;
@@ -248,4 +248,20 @@ body {
 	border-radius: 50%;
 	background: #313b48;
 	cursor: pointer;
+}
+
+.settings {
+	position: absolute;
+	top: 25px;
+	right: 25px;
+	background-color: transparent;
+}
+
+.settings:hover {
+	background-color: transparent;
+}
+
+.settingsIcon {
+	font-size: 30px;
+	color: white;
 }
