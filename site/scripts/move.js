@@ -19,7 +19,7 @@ function findMoves(pressedX, pressedY, Grid = grid) {
 	}
 }
 
-function handlePromotion(currX, currY) {
+function handlePromotion(currX, currY, Grid = grid) {
 	Grid[currX][currY] = new Queen(Grid[currX][currY].colorName);
 }
 
