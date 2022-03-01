@@ -142,9 +142,9 @@ function computerTurn() {
 	//let searched = Search(depthValue, BLACK);
 	randomMove();
 
-	console.log('❔ WENT THROUGH:', gonethrough);
-	console.log('❔ TOOK:', searched[2]);
-	console.log('❔ BEST:', searched);
+	//console.log('❔ WENT THROUGH:', gonethrough);
+	//console.log('❔ TOOK:', searched[2]);
+	//console.log('❔ BEST:', searched);
 
 	gonethrough = 0;
 
