@@ -23,10 +23,8 @@ const columns = 8,
 	w = WIDTH / columns,
 	h = HEIGHT / rows;
 
-let grid = new Array(columns);
-
-grid.options = [];
-grid.inCheck = null; // TEAM IN CHECK
+let board = new Board(null, true),
+	grid = board.grid;
 
 let current = [],
 	depthValue = +document.getElementById('depthInput').value;
@@ -48,7 +46,7 @@ function loadImages() {
 
 function setup() {
 	loadImages();
-	initGrid(grid);
+
 	createCanvas(WIDTH, HEIGHT);
 	timerInc.innerText = '+' + increment;
 	timerBlack.innerText = formatTime(timeBlack);

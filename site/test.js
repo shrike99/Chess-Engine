@@ -12,14 +12,17 @@
 //console.log(x.EvaluatePosition(WHITE));
 
 let x = new Board();
-console.log('1:', test(1, x));
-console.log('2:', test(2, x));
-console.log('3:', test(3, x)); //WRONG
-console.log('4:', test(4, x)); //WRONG AND TAKING AGES
+let m = [];
+//test(5, x);
+//console.log('1:', test(1, x));
+//console.log('2:', test(2, x));
+//console.log('3:', test(3, x)); //WRONG
+//console.log('4:', test(4, x)); //WRONG AND TAKING AGES
 
 function test(depth, BOARD, col = WHITE) {
 	if (depth === 0) return 1;
 	const moves = BOARD.getMoves(col);
+	m.push(moves);
 	let count = 0;
 
 	for (let i = 0; i < moves.length; i++) {
@@ -33,4 +36,14 @@ function test(depth, BOARD, col = WHITE) {
 		}
 	}
 	return count;
+}
+
+for (let i = 0; i < m.length; i++) {
+	for (let j = 0; j < m[i].length; j++) {
+		for (let k = 0; k < m[i][j][1].length; k++) {
+			if (m[i][j][1][k].extra !== '' && m[i][j][1][k].extra !== 'DOUBLE') {
+				console.log(`${m[i][j][1][k].extra}: ${m[i][j][1][k]}`);
+			}
+		}
+	}
 }

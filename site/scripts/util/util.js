@@ -1,46 +1,3 @@
-async function initGrid(board) {
-	for (let i = 0; i < grid.length; i++) {
-		grid[i] = new Array(rows);
-		for (let j = 0; j < grid[i].length; j++) {
-			if (j === 1) {
-				grid[i][j] = new Pawn(BLACK);
-			} else if (j === rows - 2) {
-				grid[i][j] = new Pawn(WHITE);
-			} else if (i === 0 || i === columns - 1) {
-				if (j === 0) {
-					grid[i][j] = new Rook(BLACK);
-				} else if (j === rows - 1) {
-					grid[i][j] = new Rook(WHITE);
-				}
-			} else if (i === 1 || i === columns - 2) {
-				if (j === 0) {
-					grid[i][j] = new Knight(BLACK);
-				} else if (j === rows - 1) {
-					grid[i][j] = new Knight(WHITE);
-				}
-			} else if (i === 2 || i === columns - 3) {
-				if (j === 0) {
-					grid[i][j] = new Bishop(BLACK);
-				} else if (j === rows - 1) {
-					grid[i][j] = new Bishop(WHITE);
-				}
-			} else if (i === 3) {
-				if (j === 0) {
-					grid[i][j] = new Queen(BLACK);
-				} else if (j === rows - 1) {
-					grid[i][j] = new Queen(WHITE);
-				}
-			} else if (i === 4) {
-				if (j === 0) {
-					grid[i][j] = new King(BLACK);
-				} else if (j === rows - 1) {
-					grid[i][j] = new King(WHITE);
-				}
-			}
-		}
-	}
-}
-
 function getWhite(_grid) {
 	let whitePieces = [];
 
@@ -120,9 +77,8 @@ function isLowerCase(n) {
 }
 
 function isEmpty(i, j, Grid = grid) {
-	if (0 <= i && i < columns) {
-		return !Grid[i][j];
-	} else return true;
+	if (0 <= i && i < columns) return !Grid[i][j];
+	return true;
 }
 
 function formatTime(time) {
@@ -152,12 +108,11 @@ function isBeingAttackedMain(colorName, i, j, Grid) {
 			return true;
 		}
 	}
-
 	// check for king attacking
 	const kingTest = [
 		[i + 1, j],
 		[i + 1, j + 1],
-		[i + 1, j - 1],
+		[i + 1, j - 1], 
 		[i, j],
 		[i, j + 1],
 		[i, j - 1],
@@ -165,36 +120,30 @@ function isBeingAttackedMain(colorName, i, j, Grid) {
 		[i - 1, j + 1],
 		[i - 1, j - 1],
 	];
-
 	for (let index = 0; index < kingTest.length; index++) {
 		const [testI, testJ] = kingTest[index];
 		if (!isEmpty(testI, testJ, Grid) && Grid[testI][testJ].type === 'King' && hasEnemy(colorName, testI, testJ, Grid)) {
 			return true;
 		}
 	}
-
 	// check for bishops / queen
 	if (isAttackedWithIncrement(colorName, i + 1, j + 1, 1, 1, ['Bishop', 'Queen'], Grid)) return true;
 	if (isAttackedWithIncrement(colorName, i - 1, j - 1, -1, -1, ['Bishop', 'Queen'], Grid)) return true;
 	if (isAttackedWithIncrement(colorName, i + 1, j - 1, 1, -1, ['Bishop', 'Queen'], Grid)) return true;
 	if (isAttackedWithIncrement(colorName, i - 1, j + 1, -1, 1, ['Bishop', 'Queen'], Grid)) return true;
-
 	//  check for rooks / queen
 	if (isAttackedWithIncrement(colorName, i + 1, j, 1, 0, ['Rook', 'Queen'], Grid)) return true;
 	if (isAttackedWithIncrement(colorName, i, j + 1, 0, 1, ['Rook', 'Queen'], Grid)) return true;
 	if (isAttackedWithIncrement(colorName, i - 1, j, -1, 0, ['Rook', 'Queen'], Grid)) return true;
 	if (isAttackedWithIncrement(colorName, i, j - 1, 0, -1, ['Rook', 'Queen'], Grid)) return true;
-
 	// check for pawns
 	const direction = colorName === BLACK ? 1 : -1;
 	j += direction;
-
 	if (!isEmpty(i - 1, j, Grid) && Grid[i - 1][j].type === 'Pawn' && hasEnemy(colorName, i - 1, j, Grid)) {
 		return true;
 	} else if (!isEmpty(i + 1, j, Grid) && Grid[i + 1][j].type === 'Pawn' && hasEnemy(colorName, i + 1, j, Grid)) {
 		return true;
 	}
-
 	return false;
 }
 

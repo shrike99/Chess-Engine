@@ -17,10 +17,12 @@ for (let i = 0; i < 8; i++) {
 
 class Board {
 	constructor(board, main = false) {
-		const columns = 8;
-
-		this.grid = new Array(columns);
+		this.grid = new Array(8);
 		this.mainBoard = main;
+		this.grid.options = [];
+		this.grid.inCheck = null;
+		this.grid.hasEnPassant = false;
+		this.grid.enPassant = null;
 
 		if (board) this.loadFromBoard(board);
 		else this.loadInit();
@@ -52,49 +54,43 @@ class Board {
 	}
 
 	loadInit() {
-		const rows = 8,
-			columns = 8;
+		for (let i = 0; i < this.grid.length; i++) this.grid[i] = new Array(8);
 
-		for (let i = 0; i < this.grid.length; i++) {
-			this.grid[i] = new Array(rows);
-			for (let j = 0; j < this.grid[i].length; j++) {
-				if (j === 1) {
-					this.grid[i][j] = new Pawn(BLACK);
-				} else if (j === rows - 2) {
-					this.grid[i][j] = new Pawn(WHITE);
-				} else if (i === 0 || i === columns - 1) {
-					if (j === 0) {
-						this.grid[i][j] = new Rook(BLACK);
-					} else if (j === rows - 1) {
-						this.grid[i][j] = new Rook(WHITE);
-					}
-				} else if (i === 1 || i === columns - 2) {
-					if (j === 0) {
-						this.grid[i][j] = new Knight(BLACK);
-					} else if (j === rows - 1) {
-						this.grid[i][j] = new Knight(WHITE);
-					}
-				} else if (i === 2 || i === columns - 3) {
-					if (j === 0) {
-						this.grid[i][j] = new Bishop(BLACK);
-					} else if (j === rows - 1) {
-						this.grid[i][j] = new Bishop(WHITE);
-					}
-				} else if (i === 3) {
-					if (j === 0) {
-						this.grid[i][j] = new Queen(BLACK);
-					} else if (j === rows - 1) {
-						this.grid[i][j] = new Queen(WHITE);
-					}
-				} else if (i === 4) {
-					if (j === 0) {
-						this.grid[i][j] = new King(BLACK);
-					} else if (j === rows - 1) {
-						this.grid[i][j] = new King(WHITE);
-					}
-				}
-			}
-		}
+		this.grid[0][0] = new Rook(BLACK);
+		this.grid[1][0] = new Knight(BLACK);
+		this.grid[2][0] = new Bishop(BLACK);
+		this.grid[3][0] = new Queen(BLACK);
+		this.grid[4][0] = new King(BLACK);
+		this.grid[5][0] = new Bishop(BLACK);
+		this.grid[6][0] = new Knight(BLACK);
+		this.grid[7][0] = new Rook(BLACK);
+
+		this.grid[0][1] = new Pawn(BLACK);
+		this.grid[1][1] = new Pawn(BLACK);
+		this.grid[2][1] = new Pawn(BLACK);
+		this.grid[3][1] = new Pawn(BLACK);
+		this.grid[4][1] = new Pawn(BLACK);
+		this.grid[5][1] = new Pawn(BLACK);
+		this.grid[6][1] = new Pawn(BLACK);
+		this.grid[7][1] = new Pawn(BLACK);
+
+		this.grid[0][6] = new Pawn(WHITE);
+		this.grid[1][6] = new Pawn(WHITE);
+		this.grid[2][6] = new Pawn(WHITE);
+		this.grid[3][6] = new Pawn(WHITE);
+		this.grid[4][6] = new Pawn(WHITE);
+		this.grid[5][6] = new Pawn(WHITE);
+		this.grid[6][6] = new Pawn(WHITE);
+		this.grid[7][6] = new Pawn(WHITE);
+
+		this.grid[0][7] = new Rook(WHITE);
+		this.grid[1][7] = new Knight(WHITE);
+		this.grid[2][7] = new Bishop(WHITE);
+		this.grid[3][7] = new Queen(WHITE);
+		this.grid[4][7] = new King(WHITE);
+		this.grid[5][7] = new Bishop(WHITE);
+		this.grid[6][7] = new Knight(WHITE);
+		this.grid[7][7] = new Rook(WHITE);
 	}
 
 	getMoves(col) {
@@ -136,27 +132,30 @@ class Board {
 		let pieceinoption = this.grid[pressedX][pressedY],
 			end = this.grid[currX][currY].colorName === WHITE ? 0 : rows - 1;
 
-		if (pressedY === end && this.grid[currX][currY].type === 'Pawn') {
-			handlePromotion(currX, currY);
-		}
 		this.grid[currX][currY].moved = true;
 
-		//const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
+		if (pressedY === end && this.grid[currX][currY].type === 'Pawn') handlePromotion(currX, currY);
 
 		this.grid[pressedX][pressedY] = this.grid[currX][currY];
 		this.grid[currX][currY] = null;
 
+		// EN PASSANT
+
 		const enpassantRow = this.grid[pressedX][pressedY].colorName === WHITE ? 3 : 4;
 
 		if (option.extra === DOUBLE) {
-			this.grid[pressedX][pressedY].turn = turn;
+			this.grid.hasEnPassant = true;
+			this.grid.enPassant = option;
+		} else {
+			this.grid.hasEnPassant = false;
+			this.grid.enPassant = null;
 		}
 
 		if (option.extra === ENPASSANT && this.grid[pressedX][enpassantRow].turn === turn - 1) {
-			let direction = this.grid[pressedX][pressedY].colorName === WHITE ? 1 : -1;
-
 			this.grid[pressedX][enpassantRow] = null;
 		}
+
+		// CASTLE
 
 		if (option.extra === CASTLE) {
 			// move rook in castling
@@ -168,6 +167,8 @@ class Board {
 				this.grid[0][pressedY] = null;
 			}
 		}
+
+		// TIMER
 
 		if (this.mainBoard) {
 			if (turnColour === BLACK) whiteTimerStart();

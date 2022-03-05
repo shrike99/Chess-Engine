@@ -37,16 +37,17 @@ function isBeingAttacked(colorName, endI, endJ, i, j, fillI, fillJ, Grid) {
 	}
 }
 
-function checkEnpassant(i, j, Grid, initI, initJ, nextRow, direction, enpassantRow) {
-	if (!isEmpty(i + 1, j, Grid) && hasEnemy(this.colorName, i + 1, j, Grid) && j === enpassantRow) {
-		if (Grid[i + 1][nextRow + direction * -1].turn === turn - 1 || Grid[i + 1][nextRow + direction * -1].turn === -1) {
-			Grid.options.push(new Move(initI, initJ, i + 1, nextRow, moveScore(initI, initJ, i + 1, nextRow, deepclone(Grid)), ENPASSANT));
-		}
-	}
-
-	if (!isEmpty(i - 1, j, Grid) && hasEnemy(this.colorName, i - 1, j, Grid) && j === enpassantRow) {
-		if (Grid[i - 1][nextRow + direction * -1].turn === turn - 1 || Grid[i - 1][nextRow + direction * -1].turn === -1) {
+function checkEnpassant(i, j, Grid, initI, initJ, nextRow, direction, enpassantRow, col) {
+	if (Grid.hasEnPassant) {
+		let move = Grid.enPassant;
+		//LEFT
+		if (move.endX === i - 1 && move.endY === j) {
 			Grid.options.push(new Move(initI, initJ, i - 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, deepclone(Grid)), ENPASSANT));
+		}
+
+		//RIGHT
+		if (move.endX === i + 1 && move.endY === j) {
+			Grid.options.push(new Move(initI, initJ, i + 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, deepclone(Grid)), ENPASSANT));
 		}
 	}
 }
@@ -98,7 +99,7 @@ class Pawn extends Piece {
 		super('Pawn', color);
 	}
 
-	findLegalMoves(i, j, Grid = grid) {
+	findLegalMoves(i, j, Grid = grid.grid) {
 		current = [i, j];
 
 		const direction = this.colorName === WHITE ? -1 : 1,
@@ -109,7 +110,7 @@ class Pawn extends Piece {
 
 		Grid.options = [];
 
-		checkEnpassant(i, j, Grid, initI, initJ, nextRow, direction, enpassantRow);
+		checkEnpassant(i, j, Grid, initI, initJ, nextRow, direction, enpassantRow, this.colorName);
 
 		if (0 <= nextRow && nextRow < rows && isEmpty(i, nextRow, Grid)) {
 			Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid))));

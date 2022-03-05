@@ -36,20 +36,20 @@ function MovePiece(currX, currY, pressedX, pressedY, Grid, option, isSearching =
 			Grid[currX][currY].moved = true;
 		}
 
-		//const option = options.find((x) => x.endX === pressedX && x.endY === pressedY);
-
 		Grid[pressedX][pressedY] = Grid[currX][currY];
 		Grid[currX][currY] = null;
 
 		const enpassantRow = Grid[pressedX][pressedY].colorName === WHITE ? 3 : 4;
 
 		if (option.extra === DOUBLE) {
-			Grid[pressedX][pressedY].turn = turn;
+			Grid.hasEnPassant = true;
+			Grid.enPassant = option;
+		} else {
+			Grid.hasEnPassant = false;
+			Grid.enPassant = null;
 		}
 
-		if (option.extra === ENPASSANT && Grid[pressedX][enpassantRow].turn === turn - 1) {
-			let direction = Grid[pressedX][pressedY].colorName === WHITE ? 1 : -1;
-
+		if (option.extra === ENPASSANT) {
 			Grid[pressedX][enpassantRow] = null;
 		}
 
