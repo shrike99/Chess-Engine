@@ -161,14 +161,14 @@ body {
 	background: #151a21;
 }
 
-#mainDiv {
+.mainDiv {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
 }
 
-#check {
+.title {
 	margin-bottom: 60px;
 	margin-top: 70px;
 	text-align: center;
@@ -180,7 +180,7 @@ body {
 	color: white;
 }
 
-#backgroundHidden {
+.backgroundHidden {
 	display: flex;
 	justify-content: center;
 	/* align-items: center; */

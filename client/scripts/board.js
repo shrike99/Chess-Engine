@@ -101,26 +101,19 @@ class Board {
 	}
 
 	getMoves(col) {
-		let pieces = [],
-			pieceMovesList = [];
+		const pieceMovesList = [];
 
 		for (let i = 0; i < this.grid.length; i++) {
 			for (let j = 0; j < this.grid[i].length; j++) {
-				if (!isEmpty(i, j, this.grid) && this.grid[i][j].colorName === col) pieces.push([i, j]);
+				if (!isEmpty(i, j, this.grid) && this.grid[i][j].colorName === col) {
+					findMoves(i, j, this.grid);
+
+					if (this.grid.options.length !== 0) {
+						pieceMovesList.push([[i, j], this.grid.options, this.grid[i][j]]);
+					}
+					this.grid.options = [];
+				}
 			}
-		}
-
-		for (let i = 0; i < pieces.length; i++) {
-			let x = pieces[i][0],
-				y = pieces[i][1],
-				current = [x, y];
-
-			findMoves(x, y, this.grid);
-
-			if (this.grid.options.length !== 0) {
-				pieceMovesList.push([current, this.grid.options, this.grid[x][y]]);
-			}
-			this.grid.options = [];
 		}
 
 		return pieceMovesList;

@@ -7,8 +7,9 @@ const io = require('socket.io')(3000, {
 const players = [];
 
 io.on('connection', (socket) => {
+	console.log(socket.id);
 	players.push(socket.id);
-	console.log(players + '\n');
+	//console.log(players + '\n');
 
 	socket.on('request-players', () => {
 		io.to(socket.id).emit('player-list', players);
@@ -16,6 +17,7 @@ io.on('connection', (socket) => {
 
 	socket.on('found-player', (id) => {
 		socket.playerID = id;
+		io.to(id).emit('load', socket.id);
 	});
 
 	socket.on('move', (move) => {

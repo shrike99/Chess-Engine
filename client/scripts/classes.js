@@ -37,7 +37,32 @@ function isBeingAttacked(colorName, endI, endJ, i, j, fillI, fillJ, Grid) {
 	}
 }
 
-function checkEnpassant(i, j, Grid, initI, initJ, nextRow, direction, enpassantRow, col) {
+function canPawnEat(i, Grid, initI, initJ, nextRow, colorName) {
+	//LEFT
+	if (i - 1 >= 0 && i - 1 < columns && !isEmpty(i - 1, nextRow, Grid) && hasEnemy(colorName, i - 1, nextRow, Grid)) {
+		Grid.options.push(new Move(initI, initJ, i - 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, deepclone(Grid))));
+	}
+
+	//RIGHT
+	if (i + 1 >= 0 && i + 1 < columns && !isEmpty(i + 1, nextRow, Grid) && hasEnemy(colorName, i + 1, nextRow, Grid)) {
+		Grid.options.push(new Move(initI, initJ, i + 1, nextRow, moveScore(initI, initJ, i + 1, nextRow, deepclone(Grid))));
+	}
+}
+
+function normalPlusDoubleMoves(i, j, Grid, initI, initJ, nextRow, direction, colorName) {
+	const correctROW = colorName === WHITE ? 6 : 1,
+		doubleJ = j + direction * 2;
+
+	if (0 <= nextRow && nextRow < rows && isEmpty(i, nextRow, Grid)) {
+		Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid))));
+
+		if (isEmpty(i, doubleJ, Grid) && correctROW === j) {
+			Grid.options.push(new Move(initI, initJ, i, doubleJ, moveScore(initI, initJ, i, doubleJ, deepclone(Grid)), DOUBLE));
+		}
+	}
+}
+
+function checkEnpassant(i, j, Grid, initI, initJ, nextRow) {
 	if (Grid.hasEnPassant) {
 		let move = Grid.enPassant;
 		//LEFT
@@ -102,34 +127,19 @@ class Pawn extends Piece {
 	findLegalMoves(i, j, Grid = grid.grid) {
 		current = [i, j];
 
-		const direction = this.colorName === WHITE ? -1 : 1,
-			enpassantRow = this.colorName === WHITE ? 3 : 4;
+		const direction = this.colorName === WHITE ? -1 : 1;
+
 		let initI = i,
 			initJ = j,
 			nextRow = j + direction;
 
 		Grid.options = [];
 
-		checkEnpassant(i, j, Grid, initI, initJ, nextRow, direction, enpassantRow, this.colorName);
+		checkEnpassant(i, j, Grid, initI, initJ, nextRow);
 
-		if (0 <= nextRow && nextRow < rows && isEmpty(i, nextRow, Grid)) {
-			Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid))));
-			nextRow += direction;
-			const correctROW = this.colorName === WHITE ? 6 : 1;
-			if (0 <= nextRow && nextRow < rows && isEmpty(i, nextRow, Grid) && correctROW === j) {
-				Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid)), DOUBLE));
-			}
-		}
-		nextRow = j + direction;
+		normalPlusDoubleMoves(i, j, Grid, initI, initJ, nextRow, direction, this.colorName);
 
-		i--;
-		if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow, Grid) && !isEmpty(i, nextRow, Grid)) {
-			Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid))));
-		}
-		i += 2;
-		if (0 <= i && i < columns && hasEnemy(this.colorName, i, nextRow, Grid) && !isEmpty(i, nextRow, Grid)) {
-			Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid))));
-		}
+		canPawnEat(i, Grid, initI, initJ, nextRow, this.colorName);
 	}
 }
 
