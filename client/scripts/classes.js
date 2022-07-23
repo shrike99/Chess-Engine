@@ -40,12 +40,12 @@ function isBeingAttacked(colorName, endI, endJ, i, j, fillI, fillJ, Grid) {
 function canPawnEat(i, Grid, initI, initJ, nextRow, colorName) {
 	//LEFT
 	if (i - 1 >= 0 && i - 1 < columns && !isEmpty(i - 1, nextRow, Grid) && hasEnemy(colorName, i - 1, nextRow, Grid)) {
-		Grid.options.push(new Move(initI, initJ, i - 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, deepclone(Grid))));
+		Grid.options.push(new Move(initI, initJ, i - 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, new Board(Grid).grid)));
 	}
 
 	//RIGHT
 	if (i + 1 >= 0 && i + 1 < columns && !isEmpty(i + 1, nextRow, Grid) && hasEnemy(colorName, i + 1, nextRow, Grid)) {
-		Grid.options.push(new Move(initI, initJ, i + 1, nextRow, moveScore(initI, initJ, i + 1, nextRow, deepclone(Grid))));
+		Grid.options.push(new Move(initI, initJ, i + 1, nextRow, moveScore(initI, initJ, i + 1, nextRow, new Board(Grid).grid)));
 	}
 }
 
@@ -54,10 +54,10 @@ function normalPlusDoubleMoves(i, j, Grid, initI, initJ, nextRow, direction, col
 		doubleJ = j + direction * 2;
 
 	if (0 <= nextRow && nextRow < rows && isEmpty(i, nextRow, Grid)) {
-		Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, deepclone(Grid))));
+		Grid.options.push(new Move(initI, initJ, i, nextRow, moveScore(initI, initJ, i, nextRow, new Board(Grid).grid)));
 
 		if (isEmpty(i, doubleJ, Grid) && correctROW === j) {
-			Grid.options.push(new Move(initI, initJ, i, doubleJ, moveScore(initI, initJ, i, doubleJ, deepclone(Grid)), DOUBLE));
+			Grid.options.push(new Move(initI, initJ, i, doubleJ, moveScore(initI, initJ, i, doubleJ, new Board(Grid).grid), DOUBLE));
 		}
 	}
 }
@@ -67,12 +67,12 @@ function checkEnpassant(i, j, Grid, initI, initJ, nextRow) {
 		let move = Grid.enPassant;
 		//LEFT
 		if (move.endX === i - 1 && move.endY === j) {
-			Grid.options.push(new Move(initI, initJ, i - 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, deepclone(Grid)), ENPASSANT));
+			Grid.options.push(new Move(initI, initJ, i - 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, new Board(Grid).grid), ENPASSANT));
 		}
 
 		//RIGHT
 		if (move.endX === i + 1 && move.endY === j) {
-			Grid.options.push(new Move(initI, initJ, i + 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, deepclone(Grid)), ENPASSANT));
+			Grid.options.push(new Move(initI, initJ, i + 1, nextRow, moveScore(initI, initJ, i - 1, nextRow, new Board(Grid).grid), ENPASSANT));
 		}
 	}
 }
@@ -242,7 +242,7 @@ class King extends Piece {
 			if (!isEmpty(testI, j, Grid) && Grid[testI][j].type === 'Rook' && !Grid[testI][j].moved) {
 				if (!isBeingAttacked(this.colorName, i + 1, j, ...Array(4), Grid) && !isBeingAttacked(this.colorName, i + 2, j, ...Array(4), Grid)) {
 					//console.log("rook found");
-					Grid.options.push(new Move(i, j, i + 2, j, moveScore(i, j, i + 2, j, deepclone(Grid)), CASTLE));
+					Grid.options.push(new Move(i, j, i + 2, j, moveScore(i, j, i + 2, j, new Board(Grid).grid), CASTLE));
 				}
 			}
 
@@ -256,7 +256,7 @@ class King extends Piece {
 
 			if (!isEmpty(testI, j, Grid) && Grid[testI][j].type === 'Rook' && !Grid[testI][j].moved) {
 				if (!isBeingAttacked(this.colorName, i - 1, j, ...Array(4), Grid) && !isBeingAttacked(this.colorName, i - 2, j, ...Array(4), Grid)) {
-					Grid.options.push(new Move(i, j, i - 2, j, moveScore(i, j, i - 2, j, deepclone(Grid)), CASTLE));
+					Grid.options.push(new Move(i, j, i - 2, j, moveScore(i, j, i - 2, j, new Board(Grid).grid), CASTLE));
 				}
 			}
 		}

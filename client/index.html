@@ -12,16 +12,73 @@
 		<div class="mainDiv">
 			<p class="title" id="check">White's turn</p>
 			<div class="backgroundHidden">
-				<div>
-					<div id="gameBackground">
-						<main></main>
+				<div id="chat">
+					<b class="sub" style="margin-bottom: 0px">Chat</b>
+					<div id="chatBox">
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName13" class="chatName">&nbsp;</span>
+							<p id="chatlog13" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName12" class="chatName">&nbsp;</span>
+							<p id="chatlog12" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName11" class="chatName">&nbsp;</span>
+							<p id="chatlog11" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName10" class="chatName">&nbsp;</span>
+							<p id="chatlog10" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName9" class="chatName">&nbsp;</span>
+							<p id="chatlog9" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName8" class="chatName">&nbsp;</span>
+							<p id="chatlog8" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName7" class="chatName">&nbsp;</span>
+							<p id="chatlog7" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName6" class="chatName">&nbsp;</span>
+							<p id="chatlog6" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName5" class="chatName">&nbsp;</span>
+							<p id="chatlog5" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName4" class="chatName">&nbsp;</span>
+							<p id="chatlog4" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName3" class="chatName">&nbsp;</span>
+							<p id="chatlog3" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName2" class="chatName">&nbsp;</span>
+							<p id="chatlog2" class="chatlog">&nbsp;</p>
+						</div>
+						<div style="display: flex; flex-direction: row">
+							<span id="chatName1" class="chatName">&nbsp;</span>
+							<p id="chatlog1" class="chatlog">&nbsp;</p>
+						</div>
 					</div>
+					<input id="message" type="text" style="vertical-align: bottom; margin-bottom: 20px" placeholder="Type your message" />
 				</div>
+				<div id="gameBackground">
+					<main></main>
+				</div>
+
 				<div id="gameInfo">
 					<div>
 						<p id="playingAgainst">Playing against<b class="red" style="margin-left: 10px; margin-top: 0px">Computer</b></p>
 						<div>
-							<b id="depth">Depth (3)</b>
+							<b class="sub">Depth (3)</b>
 							<input id="depthInput" class="slider" type="range" min="1" onchange="updateDepth(this.value)" max="30" value="3" oninput="depth.innerText = `Depth (${depthInput.value})`" />
 						</div>
 						<div id="timerBackground">
@@ -33,11 +90,29 @@
 					</div>
 
 					<div id="buttonDiv">
-						<button id="surrender" onclick="EvalClick()">Surrender</button>
+						<button id="surrender" onclick="Surrender()">Surrender</button>
 						<button id="togglebot" onclick="ToggleBot()">BOT: ON</button>
 						<button id="draw" onclick="load()">Draw</button>
 					</div>
 				</div>
+			</div>
+			<div id="promotionBox">
+				<label class="promotionRadioDiv">
+					<input class="promotionRadio" type="radio" name="promotion" value="Queen" checked onclick="changePromotion(this)" />
+					<img class="promotionSVG" src="./images/white_queen.svg" />
+				</label>
+				<label class="promotionRadioDiv">
+					<input class="promotionRadio" type="radio" name="promotion" value="Knight" onclick="changePromotion(this)" />
+					<img class="promotionSVG" src="./images/white_knight.svg" />
+				</label>
+				<label class="promotionRadioDiv">
+					<input class="promotionRadio" type="radio" name="promotion" value="Rook" onclick="changePromotion(this)" />
+					<img class="promotionSVG" src="./images/white_rook.svg" />
+				</label>
+				<label class="promotionRadioDiv">
+					<input class="promotionRadio" type="radio" name="promotion" value="Bishop" onclick="changePromotion(this)" />
+					<img class="promotionSVG" src="./images/white_bishop.svg" />
+				</label>
 			</div>
 		</div>
 		<button class="settings">
@@ -47,14 +122,15 @@
 		<link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
 		<script src="https://cdn.jsdelivr.net/npm/p5@1.3.0/lib/p5.js"></script>
 		<script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+		<script src="./scripts/util/util.js"></script>
 		<script src="./scripts/socket.js"></script>
+		<script src="./scripts/chat.js"></script>
 		<script src="./scripts/arrow.js"></script>
 		<script src="./scripts/classes.js"></script>
 		<script src="./scripts/board.js"></script>
 		<script src="./scripts/init.js"></script>
 		<script src="./scripts/move.js"></script>
 		<script src="./scripts/engine.js"></script>
-		<script src="./scripts/util/util.js"></script>
 		<script src="./scripts/util/fen/fen.js"></script>
 		<script src="./scripts/util/fen/fenUtil.js"></script>
 		<script src="./scripts/clock.js"></script>

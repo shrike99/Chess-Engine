@@ -1,7 +1,6 @@
-const socket = io('http://localhost:3000');
+const socket = io('http://localhost:3000'),
+	username = getCookie('username') ?? 'Messi';
 
 socket.on('connect', () => {
-	console.log(socket.id);
+	socket.emit('join', username, `test`);
 });
-
-socket.emit('move');

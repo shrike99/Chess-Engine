@@ -27,7 +27,12 @@ let board = new Board(null, true),
 	grid = board.grid;
 
 let current = [],
-	depthValue = +document.getElementById('depthInput').value;
+	depthValue = +document.getElementById('depthInput').value,
+	promotion = document.querySelector('input[name="promotion"]:checked').value;
+
+function changePromotion(e) {
+	promotion = e.value;
+}
 
 function loadImages() {
 	black_king_img = loadImage('images/black_king.svg');

@@ -19,6 +19,8 @@ class Board {
 	constructor(board, main = false) {
 		this.grid = new Array(8);
 		this.mainBoard = main;
+		this.history = [];
+
 		this.grid.options = [];
 		this.grid.inCheck = null;
 		this.grid.hasEnPassant = false;
@@ -152,10 +154,7 @@ class Board {
 		}
 
 		if (option.extra === ENPASSANT) {
-			if (this.grid[pressedX][enpassantRow].turn === turn - 1) {
-				// ERROR HERE
-				this.grid[pressedX][enpassantRow] = null;
-			}
+			this.grid[pressedX][enpassantRow] = null;
 		}
 
 		// CASTLE

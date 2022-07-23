@@ -3,7 +3,7 @@ function findMoves(pressedX, pressedY, Grid = grid) {
 
 	if (Grid[pressedX][pressedY].type === 'King') {
 		Grid.options = Grid.options.filter((option) => {
-			return !isBeingAttacked(turnColour, option.endX, option.endY, pressedX, pressedY, ...Array(2), deepclone(Grid));
+			return !isBeingAttacked(turnColour, option.endX, option.endY, pressedX, pressedY, ...Array(2), new Board(Grid).grid);
 		});
 	} else {
 		for (let i = 0; i < Grid.length; i++) {
@@ -20,7 +20,10 @@ function findMoves(pressedX, pressedY, Grid = grid) {
 }
 
 function handlePromotion(currX, currY, Grid = grid) {
-	Grid[currX][currY] = new Queen(Grid[currX][currY].colorName);
+	if (promotion === 'Queen') Grid[currX][currY] = new Queen(Grid[currX][currY].colorName);
+	if (promotion === 'Knight') Grid[currX][currY] = new Knight(Grid[currX][currY].colorName);
+	if (promotion === 'Bishop') Grid[currX][currY] = new Bishop(Grid[currX][currY].colorName);
+	if (promotion === 'Rook') Grid[currX][currY] = new Rook(Grid[currX][currY].colorName);
 }
 
 function MovePiece(currX, currY, pressedX, pressedY, Grid, option, isSearching = false) {

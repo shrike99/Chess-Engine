@@ -41,7 +41,6 @@ function load() {
 }
 
 let arrows = new ArrowHandler();
-let a = arrows.list;
 
 function drawArrows() {
 	if (grid.options.length !== 0) arrows.clear();
@@ -158,7 +157,8 @@ function mouseClicked() {
 
 		if (grid.options.some((x) => x.endX === pressedX && x.endY === pressedY)) {
 			const option = grid.options.find((x) => x.endX === pressedX && x.endY === pressedY);
-			MovePiece(current[0], current[1], pressedX, pressedY, grid, option);
+			board.MovePiece(current[0], current[1], pressedX, pressedY, option, grid[current[0]][current[1]].colorName);
+			//MovePiece(current[0], current[1], pressedX, pressedY, grid, option);
 		}
 	}
 }
@@ -170,14 +170,14 @@ function updateDepth() {
 // const delay = ms => new Promise(res => setTimeout(res, ms))
 
 function computerTurn() {
-	//let searched = Search(depthValue, BLACK);
+	let searched = Search(depthValue, BLACK, -Infinity, -Infinity, board);
 	randomMove();
 
 	//console.log('❔ WENT THROUGH:', gonethrough);
 	//console.log('❔ TOOK:', searched[2]);
 	//console.log('❔ BEST:', searched);
 
-	gonethrough = 0;
+	//gonethrough = 0;
 
 	//let move = searched[1];
 
@@ -193,13 +193,6 @@ function removeArr(arr, element) {
 	}
 }
 
-function EvalClick() {
-	console.log('1:', test(1, x));
-	console.log('2:', test(2, x));
-	console.log('3:', test(3, x));
-	console.log('4:', test(4, x));
-}
-
 function randomMove() {
 	let blackPieces = [];
 
@@ -211,22 +204,7 @@ function randomMove() {
 		}
 	}
 
-	let pieceMovesList = [];
-
-	for (i = 0; i < blackPieces.length; i++) {
-		let x = blackPieces[i][0];
-		let y = blackPieces[i][1];
-
-		current = [x, y];
-		findMoves(x, y, grid);
-
-		if (grid.options.length != 0) {
-			pieceMovesList.push([current, grid.options]);
-		}
-		grid.options = [];
-	}
-
-	//console.log("MOVELIST:", pieceMovesList);
+	let pieceMovesList = getAllMoves(computerCol, grid);
 
 	if (pieceMovesList.length === 0) {
 		//MATE
@@ -243,27 +221,9 @@ function randomMove() {
 		}
 	}
 
-	let best = findHighest(pieceMovesList);
-
-	let moveInfo;
-
-	let selectedPiece;
-
-	let selectedMove;
-
-	if (best === 0) {
-		moveInfo = pieceMovesList[randm(0, pieceMovesList.length - 1)];
-
-		selectedPiece = moveInfo[0];
-
+	let moveInfo = pieceMovesList[randm(0, pieceMovesList.length - 1)],
+		selectedPiece = moveInfo[0],
 		selectedMove = moveInfo[1][randm(0, moveInfo[1].length - 1)];
-	} else {
-		moveInfo = pieceMovesList[best[0]];
-
-		selectedPiece = moveInfo[0];
-
-		selectedMove = moveInfo[1][best[1]];
-	}
 
 	grid.options.push(selectedMove);
 
@@ -272,10 +232,6 @@ function randomMove() {
 	const option = grid.options.find((x) => x.endX === endX && x.endY === endY);
 
 	MovePiece(selectedPiece[0], selectedPiece[1], endX, endY, grid, option);
-}
-
-function randm(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function updateKingPosition(Grid, x, y, col) {

@@ -3,28 +3,20 @@ const io = require('socket.io')(3000, {
 		origin: ['http://127.0.0.1:5500'],
 	},
 });
-
-const players = [];
+const { userJoin, getPlayers, getCurrentUser } = require('./users');
 
 io.on('connection', (socket) => {
-	console.log(socket.id);
-	players.push(socket.id);
-	//console.log(players + '\n');
+	socket.on('join', (username, room) => {
+		const user = userJoin(socket.id, username, room);
 
-	socket.on('request-players', () => {
-		io.to(socket.id).emit('player-list', players);
+		console.log(JSON.stringify(user));
+
+		socket.join(user.room);
 	});
 
-	socket.on('found-player', (id) => {
-		socket.playerID = id;
-		io.to(id).emit('load', socket.id);
-	});
+	socket.on('chatMessage', (msg) => {
+		const user = getCurrentUser(socket.id);
 
-	socket.on('move', (move) => {
-		io.to(socket.playerID).emit('move');
-	});
-
-	socket.on('disconnect', (socket) => {
-		players.splice(players.indexOf(socket.id), 1);
+		io.to(user.room).emit('updateMessage', msg, user);
 	});
 });

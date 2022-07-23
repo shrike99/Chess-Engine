@@ -1,3 +1,7 @@
+function randm(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function getWhite(_grid) {
 	let whitePieces = [];
 
@@ -41,18 +45,9 @@ function drawArrow(base, vec, myColor) {
 function getScore(pieces) {
 	score = 0;
 	for (i = 0; i < pieces.length; i++) {
-		let piece = pieceScores.find((x) => x[0] === pieces[i].type);
-
-		if (piece) score += piece[1];
+		score += pieceScores.find((x) => x[0] === pieces[i].type)[1];
 	}
 	return score;
-}
-
-function deepclone(Grid) {
-	let clone = Grid.map(function (arr) {
-		return [...arr];
-	});
-	return clone;
 }
 
 function Mate(col, inCheck, Grid) {
@@ -173,10 +168,10 @@ function findWithIncrement(colorName, posI, posJ, i, j, iInc, jInc, Grid) {
 		initJ = j;
 	while (0 <= i && i < columns && 0 <= j && j < rows) {
 		if (isEmpty(i, j, Grid)) {
-			Grid.options.push(new Move(posI, posJ, i, j, moveScore(posI, posJ, i, j, deepclone(Grid))));
+			Grid.options.push(new Move(posI, posJ, i, j, moveScore(posI, posJ, i, j, new Board(Grid).grid)));
 		} else {
 			if (hasEnemy(colorName, i, j, Grid)) {
-				Grid.options.push(new Move(posI, posJ, i, j, moveScore(posI, posJ, i, j, deepclone(Grid))));
+				Grid.options.push(new Move(posI, posJ, i, j, moveScore(posI, posJ, i, j, new Board(Grid).grid)));
 			}
 			break;
 		}
@@ -187,7 +182,7 @@ function findWithIncrement(colorName, posI, posJ, i, j, iInc, jInc, Grid) {
 
 function pushOptionIfOpenOrEnemy(colorName, initI, initJ, i, j, Grid) {
 	if (i >= 0 && i < columns && j >= 0 && j < rows && (isEmpty(i, j, Grid) || hasEnemy(colorName, i, j, Grid))) {
-		Grid.options.push(new Move(initI, initJ, i, j, moveScore(initI, initJ, i, j, deepclone(Grid))));
+		Grid.options.push(new Move(initI, initJ, i, j, moveScore(initI, initJ, i, j, new Board(Grid).grid)));
 	}
 }
 

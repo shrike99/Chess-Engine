@@ -43,11 +43,54 @@ body {
 	background-color: #0b0e11;
 }
 
+.promotionSVG {
+	cursor: pointer;
+	width: 60px;
+	height: 60px;
+}
+
+.promotionRadio {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.promotionRadio:checked + img {
+	border-radius: 10px;
+	background-color: #fd4d4d;
+	transition: background-color 300ms;
+}
+
+.promotionRadioDiv + .promotionRadioDiv {
+	margin-left: 20px;
+}
+
+.promotionRadioDiv {
+	border-radius: 10px;
+	width: 60px;
+	height: 60px;
+	background-color: #1d252e;
+}
+
+#promotionBox {
+	border-radius: 10px;
+	margin-top: 30px;
+	padding: 10px;
+	width: 650px;
+	height: 80px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	background: #151a21;
+}
+
 #gameBackground {
 	border-radius: 10px;
 	padding: 10px;
-	width: 651px;
-	height: 651px;
+	width: 650px;
+	height: 650px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -87,7 +130,7 @@ body {
 	color: white;
 }
 
-#depth {
+.sub {
 	/* margin-top: 30px; */
 	margin-bottom: 20px;
 	flex-direction: column;
@@ -142,6 +185,32 @@ body {
 	background: #1d252e;
 }
 
+.chatlog {
+	font-size: 0.9em;
+	margin: 10px 10px 10px 5px;
+	text-overflow: wrap;
+	color: white;
+	font-family: inter;
+}
+
+.chatName {
+	font-size: 0.9em;
+	margin: 10px 0px 10px 10px;
+	text-overflow: wrap;
+	color: white;
+	font-family: inter;
+}
+
+#chatBox {
+	flex-direction: column;
+	display: flex;
+	width: 300px;
+	margin-top: 30px;
+	padding: 10px 0px;
+	border-radius: 10px;
+	background: #1d252e;
+}
+
 #buttonDiv {
 	/* margin-bottom: 10px; */
 	flex-direction: row;
@@ -154,6 +223,19 @@ body {
 	flex-direction: column;
 	justify-content: space-between;
 	margin-left: 50px;
+	vertical-align: bottom;
+	padding: 20px 20px 0px 20px;
+	width: 300px;
+	height: 651px;
+	background: #151a21;
+}
+
+#chat {
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin-right: 50px;
 	vertical-align: bottom;
 	padding: 20px 20px 0px 20px;
 	width: 300px;
