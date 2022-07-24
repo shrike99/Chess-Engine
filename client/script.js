@@ -1,6 +1,6 @@
-document.oncontextmenu = function () {
-	return false;
-};
+// document.oncontextmenu = function () {
+// 	return false;
+// };
 
 // TODO: CHECK WHETHER IT IS BLACK TURN AND IF CASTLING IS AVAILABLE
 function load() {
